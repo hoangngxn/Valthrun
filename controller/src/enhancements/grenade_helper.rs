@@ -7,14 +7,16 @@ use anyhow::Context;
 use cs2::{
     CEntityIdentityEx,
     ClassNameCache,
+    EntitySystem,
     LocalCameraControllerTarget,
-    StateCS2Memory,
     StateCurrentMap,
-    StateEntityList,
 };
-use cs2_schema_generated::cs2::client::{
-    C_BaseEntity,
-    C_CSPlayerPawnBase,
+use cs2_schema_generated::{
+    cs2::client::{
+        C_BaseEntity,
+        C_CSPlayerPawnBase,
+    },
+    EntityHandle,
 };
 use imgui::Condition;
 use nalgebra::{
@@ -86,18 +88,20 @@ impl State for StateGrenadeHelperPlayerLocation {
     type Parameter = ();
 
     fn create(states: &StateRegistry, _param: Self::Parameter) -> anyhow::Result<Self> {
-        let entities = states.resolve::<StateEntityList>(())?;
+        let entities = states.resolve::<EntitySystem>(())?;
         let class_name_cache = states.resolve::<ClassNameCache>(())?;
 
         let view_target = states.resolve::<LocalCameraControllerTarget>(())?;
-        let Some(target_entity_id) = view_target.target_entity_id else {
+        if view_target.target_entity_id.is_none() {
             /* We're currently not spectating an entity. Not showing grenade helper. */
             return Ok(Self::Unknown);
-        };
+        }
 
         let local_entity_identity = entities
-            .identity_from_index(target_entity_id)
-            .context("missing view target entity")?;
+            .get_by_handle(&EntityHandle::<C_BaseEntity>::from_index(
+                view_target.target_entity_id.unwrap(),
+            ))?
+            .with_context(|| obfstr!("no local entity").to_string())?;
 
         let local_entity_class = class_name_cache
             .lookup(&local_entity_identity.entity_class_info()?)?
@@ -109,17 +113,15 @@ impl State for StateGrenadeHelperPlayerLocation {
             return Ok(Self::Unknown);
         }
 
-        let memory = states.resolve::<StateCS2Memory>(())?;
         let local_entity = local_entity_identity
-            .entity_ptr::<dyn C_CSPlayerPawnBase>()?
-            .value_reference(memory.view_arc())
-            .context("local entity nullptr")?;
+            .entity()?
+            .cast::<C_CSPlayerPawnBase>()
+            .read_schema()?;
 
         let local_position = Vector3::from_column_slice(
             &local_entity
                 .m_pGameSceneNode()?
-                .value_reference(memory.view_arc())
-                .context("m_pGameSceneNode nullptr")?
+                .reference_schema()?
                 .m_vecAbsOrigin()?,
         );
 

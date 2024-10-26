@@ -2,20 +2,17 @@ use core::f32;
 
 use anyhow::Context;
 use cs2::{
-    schema::ConVar,
-    StateCS2Memory,
-    StateEntityList,
-    StateLocalPlayerController,
+    ConVar,
+    EntitySystem,
 };
 use overlay::UnicodeTextRenderer;
-use raw_struct::Reference;
 use valthrun_kernel_interface::MouseState;
 
 use super::Enhancement;
 use crate::settings::AppSettings;
 
 pub struct AntiAimPunsh {
-    mouse_sensitivity: Reference<dyn ConVar>,
+    mouse_sensitivity: ConVar,
 
     mouse_adjustment_x: i32,
     mouse_adjustment_y: i32,
@@ -24,7 +21,7 @@ pub struct AntiAimPunsh {
 }
 
 impl AntiAimPunsh {
-    pub fn new(mouse_sensitivity: Reference<dyn ConVar>) -> Self {
+    pub fn new(mouse_sensitivity: ConVar) -> Self {
         Self {
             mouse_sensitivity,
 
@@ -38,24 +35,22 @@ impl AntiAimPunsh {
 
 impl Enhancement for AntiAimPunsh {
     fn update(&mut self, ctx: &crate::UpdateContext) -> anyhow::Result<()> {
-        let memory = ctx.states.resolve::<StateCS2Memory>(())?;
         let settings = ctx.states.resolve::<AppSettings>(())?;
         if !settings.aim_assist_recoil {
             return Ok(());
         }
 
-        let local_controller = ctx.states.resolve::<StateLocalPlayerController>(())?;
-        let local_pawn_handle = match local_controller.instance.value_reference(memory.view_arc()) {
-            Some(local_controller) => local_controller.m_hPlayerPawn()?,
-            None => return Ok(()),
-        };
+        let entities = ctx.states.resolve::<EntitySystem>(())?;
+        let local_controller = entities.get_local_player_controller()?;
+        if local_controller.is_null()? {
+            return Ok(());
+        }
 
-        let entities = ctx.states.resolve::<StateEntityList>(())?;
         let local_pawn = entities
-            .entity_from_handle(&local_pawn_handle)
+            .get_by_handle(&local_controller.reference_schema()?.m_hPlayerPawn()?)?
             .context("missing local player pawn")?
-            .value_reference(memory.view_arc())
-            .context("nullptr")?;
+            .entity()?
+            .read_schema()?;
 
         if local_pawn.m_iShotsFired()? <= 1 {
             self.mouse_adjustment_x = 0;

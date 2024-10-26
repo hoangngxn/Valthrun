@@ -1,46 +1,30 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { persistReducer } from "redux-persist";
 import { kReduxPersistLocalStorage } from "./storage";
+import { persistReducer } from "redux-persist";
 
-export type RadarSettingsState = {
-    dialogOpen: boolean;
+export type State = {
+    dialogOpen: boolean,
 
-    iconSize: number;
-    displayBombDetails: boolean;
-
-    colorDotCT: string;
-    colorDotT: string;
-    colorDotOwn: string;
-    showDotOwn: boolean;
-};
-
-export const kDefaultRadarSettings: RadarSettingsState = {
-    dialogOpen: false,
-    iconSize: 3.0,
-    displayBombDetails: true,
-
-    colorDotCT: "#0007ff",
-    colorDotT: "#ffc933",
-    colorDotOwn: "#e91e63",
-
-    showDotOwn: true,
+    iconSize: number,
 };
 const slice = createSlice({
     name: "radar-settings",
-    initialState: () => kDefaultRadarSettings,
+    initialState: (): State => ({
+        dialogOpen: false,
+        iconSize: 3.0
+    }),
     reducers: {
-        updateRadarSettings: (state, action: PayloadAction<Partial<RadarSettingsState>>) => {
+        updateRadarSettings: (state, action: PayloadAction<Partial<State>>) => {
             Object.assign(state, action.payload);
-        },
-    },
+        }
+    }
 });
 
-export default persistReducer(
-    {
-        key: "radar-settings",
-        storage: kReduxPersistLocalStorage,
-    },
-    slice.reducer,
-);
+export default persistReducer({
+    key: "radar-settings",
+    storage: kReduxPersistLocalStorage
+}, slice.reducer);
 
-export const { updateRadarSettings } = slice.actions;
+export const {
+    updateRadarSettings,
+} = slice.actions;

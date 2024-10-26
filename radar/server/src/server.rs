@@ -8,7 +8,12 @@ use std::{
     },
 };
 
-use futures_util::Future;
+use anyhow::anyhow;
+use futures_util::{
+    Future,
+    SinkExt,
+    StreamExt,
+};
 use radar_shared::protocol::{
     C2SMessage,
     ClientEvent,
@@ -29,7 +34,7 @@ use tokio::{
     task::JoinHandle,
 };
 use warp::{
-    self,
+    filters::ws::Message,
     Filter,
 };
 
@@ -115,8 +120,115 @@ impl RadarServer {
             .map(move |_, address: Option<SocketAddr>, ws: warp::ws::Ws| {
                 let server = server.clone();
                 ws.on_upgrade(move |socket| async move {
-                    let Some(address) = address else { return };
-                    PubClient::serve_from_websocket(server, address, socket).await;
+                    let address = match address {
+                        Some(address) => address,
+                        None => return,
+                    };
+
+                    let (message_tx, mut message_tx_rx) = mpsc::channel(16);
+                    let (message_rx_tx, message_rx) = mpsc::channel(16);
+
+                    {
+                        let server = match server.upgrade() {
+                            Some(server) => server,
+                            None => {
+                                log::warn!(
+                                    "Accepted ws client from {}, but server gone. Dropping client.",
+                                    address
+                                );
+                                return;
+                            }
+                        };
+
+                        let mut server = server.write().await;
+                        let client_fut = server
+                            .register_client(
+                                PubClient::new(message_tx, address.clone()),
+                                message_rx,
+                            )
+                            .await;
+
+                        tokio::spawn(client_fut);
+                    }
+
+                    {
+                        let (mut tx, mut rx) = socket.split();
+
+                        let rx_loop = tokio::spawn({
+                            let message_rx_tx = message_rx_tx.clone();
+                            async move {
+                                while let Some(message) = rx.next().await {
+                                    let message = match message {
+                                        Ok(message) => message,
+                                        Err(err) => {
+                                            let _ = message_rx_tx
+                                                .send(ClientEvent::RecvError(err.into()))
+                                                .await;
+                                            break;
+                                        }
+                                    };
+
+                                    if message.is_text() {
+                                        let message =
+                                            match serde_json::from_slice(message.as_bytes()) {
+                                                Ok(message) => message,
+                                                Err(err) => {
+                                                    let _ = message_rx_tx
+                                                        .send(ClientEvent::RecvError(err.into()))
+                                                        .await;
+                                                    break;
+                                                }
+                                            };
+
+                                        if let Err(err) = {
+                                            message_rx_tx
+                                                .send(ClientEvent::RecvMessage(message))
+                                                .await
+                                        } {
+                                            log::warn!(
+                                                "Failed to submit message to queue: {}",
+                                                err
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+                        let tx_loop = tokio::spawn({
+                            let message_rx_tx = message_rx_tx.clone();
+                            async move {
+                                while let Some(message) = message_tx_rx.recv().await {
+                                    let encoded = match serde_json::to_string(&message) {
+                                        Ok(message) => message,
+                                        Err(err) => {
+                                            let _ = message_rx_tx
+                                                .send(ClientEvent::SendError(err.into()))
+                                                .await;
+                                            break;
+                                        }
+                                    };
+
+                                    if let Err(err) = tx.send(Message::text(encoded)).await {
+                                        let _ = message_rx_tx
+                                            .send(ClientEvent::SendError(err.into()))
+                                            .await;
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
+                        /* await until ether the read or write loop has finished */
+                        tokio::select! {
+                            _ = rx_loop => {},
+                            _ = tx_loop => {},
+                        }
+
+                        let _ = message_rx_tx
+                            .send(ClientEvent::RecvError(anyhow!("client disconnected")))
+                            .await;
+                    }
                 })
             })
             .boxed();
@@ -125,13 +237,13 @@ impl RadarServer {
             HttpServeDirectory::Disk { path } => ws_route
                 .or(warp::fs::dir(path.clone()))
                 .or(warp::fs::file(path.join("index.html")))
-                .map(|reply| -> Box<dyn warp::Reply> { Box::new(reply) })
+                .map(|reply| Box::new(reply) as Box<dyn warp::Reply>)
                 .boxed(),
             HttpServeDirectory::Bundled => {
                 anyhow::bail!("bundled is currently not supported");
             }
             HttpServeDirectory::None => ws_route
-                .map(|reply| -> Box<dyn warp::Reply> { Box::new(reply) })
+                .map(|reply| Box::new(reply) as Box<dyn warp::Reply>)
                 .boxed(),
         };
 
@@ -194,7 +306,7 @@ impl RadarServer {
             while let Some(event) = rx.recv().await {
                 match event {
                     ClientEvent::RecvMessage(command) => {
-                        if let C2SMessage::Disconnect { reason: message } = &command {
+                        if let C2SMessage::Disconnect { message } = &command {
                             /* client requested a disconnect */
                             log::debug!("Client send disconnect with reason: {}", message);
                             break;
@@ -263,7 +375,7 @@ impl RadarServer {
         };
 
         log::info!("Session {} closed", session_id);
-        session.broadcast(&S2CMessage::NotifySessionClosed {});
+        session.broadcast(&S2CMessage::NotifySessionClosed);
 
         for client_id in session.subscriber.keys() {
             let client = match self.clients.get(client_id) {

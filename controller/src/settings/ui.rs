@@ -21,8 +21,8 @@ use std::{
 
 use anyhow::Context;
 use cs2::{
+    BuildInfo,
     CS2Handle,
-    StateBuildInfo,
     StateCurrentMap,
 };
 use imgui::{
@@ -210,7 +210,7 @@ impl SettingsUI {
         };
 
         ui.window(obfstr!("Valthrun"))
-            .size([650.0, 300.0], Condition::FirstUseEver)
+            .size([600.0, 300.0], Condition::FirstUseEver)
             .title_bar(false)
             .build(|| {
                 {
@@ -237,7 +237,7 @@ impl SettingsUI {
 
                 if let Some(_tab_bar) = ui.tab_bar("main") {
                     if let Some(_tab) = ui.tab_item("Information") {
-                        let build_info = app.app_state.resolve::<StateBuildInfo>(()).ok();
+                        let build_info = app.app_state.resolve::<BuildInfo>(()).ok();
 
                         ui.text(obfstr!("Valthrun an open source CS2 external read only kernel gameplay enhancer."));
                         ui.text(&format!("{} Version {} ({})", obfstr!("Valthrun"), VERSION, env!("BUILD_TIME")));
@@ -827,11 +827,11 @@ impl SettingsUI {
 
                 if let Some(_token) = {
                     let mut column_type = TableColumnSetup::new("Type");
-                    column_type.init_width_or_weight = 130.0;
+                    column_type.init_width_or_weight = 100.0;
                     column_type.flags = TableColumnFlags::WIDTH_FIXED;
 
                     let mut column_value = TableColumnSetup::new("Value");
-                    column_value.init_width_or_weight = 160.0;
+                    column_value.init_width_or_weight = 100.0;
                     column_value.flags = TableColumnFlags::WIDTH_FIXED;
 
                     ui.begin_table_header_with_flags(
@@ -992,15 +992,10 @@ impl SettingsUI {
                     },
                     EspColorType::HealthBased => EspColor::HealthBased {
                         max: Color::from_f32([0.0, 1.0, 0.0, 1.0]),
-                        mid: Color::from_f32([1.0, 1.0, 0.0, 1.0]),
                         min: Color::from_f32([1.0, 0.0, 0.0, 1.0]),
                     },
-                    EspColorType::HealthBasedRainbow => EspColor::HealthBasedRainbow { alpha: 1.0 },
-                    EspColorType::DistanceBased => EspColor::DistanceBased {
-                        near: Color::from_f32([1.0, 0.0, 0.0, 1.0]),
-                        mid: Color::from_f32([1.0, 1.0, 0.0, 1.0]),
-                        far: Color::from_f32([0.0, 1.0, 0.0, 1.0]),
-                    },
+                    EspColorType::HealthBasedRainbow => EspColor::HealthBasedRainbow,
+                    EspColorType::DistanceBased => EspColor::DistanceBased,
                 }
             }
         }
@@ -1008,18 +1003,7 @@ impl SettingsUI {
         ui.table_next_column();
         {
             match color {
-                EspColor::HealthBasedRainbow { alpha } => {
-                    ui.text("Alpha:");
-                    ui.same_line();
-                    ui.set_next_item_width(100.0);
-                    ui.slider_config(
-                        &format!("##{}_rainbow_alpha", ui.table_row_index()),
-                        0.1,
-                        1.0,
-                    )
-                    .display_format("%.2f")
-                    .build(alpha);
-                }
+                EspColor::HealthBasedRainbow => ui.text("Rainbow"),
                 EspColor::Static { value } => {
                     let mut color_value = value.as_f32();
 
@@ -1036,7 +1020,7 @@ impl SettingsUI {
                         *value = Color::from_f32(color_value);
                     }
                 }
-                EspColor::HealthBased { max, mid, min } => {
+                EspColor::HealthBased { max, min } => {
                     let mut max_value = max.as_f32();
                     if {
                         ui.color_edit4_config(
@@ -1050,23 +1034,7 @@ impl SettingsUI {
                     } {
                         *max = Color::from_f32(max_value);
                     }
-                    ui.same_line();
-                    ui.text(" => ");
-                    ui.same_line();
 
-                    let mut mid_value = mid.as_f32();
-                    if {
-                        ui.color_edit4_config(
-                            &format!("##{}_health_mid", ui.table_row_index()),
-                            &mut mid_value,
-                        )
-                        .alpha_bar(true)
-                        .inputs(false)
-                        .label(false)
-                        .build()
-                    } {
-                        *mid = Color::from_f32(mid_value);
-                    }
                     ui.same_line();
                     ui.text(" => ");
                     ui.same_line();
@@ -1085,55 +1053,7 @@ impl SettingsUI {
                         *min = Color::from_f32(min_value);
                     }
                 }
-                EspColor::DistanceBased { near, mid, far } => {
-                    let mut near_color = near.as_f32();
-                    if ui
-                        .color_edit4_config(
-                            &format!("##{}_near", ui.table_row_index()),
-                            &mut near_color,
-                        )
-                        .alpha_bar(true)
-                        .inputs(false)
-                        .label(false)
-                        .build()
-                    {
-                        *near = Color::from_f32(near_color);
-                    }
-
-                    ui.same_line();
-                    ui.text(" => ");
-                    ui.same_line();
-                    let mut mid_color = mid.as_f32();
-                    if ui
-                        .color_edit4_config(
-                            &format!("##{}_mid", ui.table_row_index()),
-                            &mut mid_color,
-                        )
-                        .alpha_bar(true)
-                        .inputs(false)
-                        .label(false)
-                        .build()
-                    {
-                        *mid = Color::from_f32(mid_color);
-                    }
-
-                    ui.same_line();
-                    ui.text(" => ");
-                    ui.same_line();
-                    let mut far_color = far.as_f32();
-                    if ui
-                        .color_edit4_config(
-                            &format!("##{}_far", ui.table_row_index()),
-                            &mut far_color,
-                        )
-                        .alpha_bar(true)
-                        .inputs(false)
-                        .label(false)
-                        .build()
-                    {
-                        *far = Color::from_f32(far_color);
-                    }
-                }
+                EspColor::DistanceBased => ui.text("Distance"),
             }
         }
     }
@@ -1422,7 +1342,7 @@ impl SettingsUI {
                     display_name: "Thera".to_owned(),
                 },
                 GrenadeSettingsTarget::Map {
-                    map_name: "de_vertigo".to_owned(),
+                    map_name: "cs_vertigo".to_owned(),
                     display_name: "Vertigo".to_owned(),
                 },
             ] {

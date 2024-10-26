@@ -1,15 +1,10 @@
 use std::time::Instant;
 
 use anyhow::Context;
-use cs2::{
-    StateCS2Memory,
-    StateEntityList,
-    StateLocalPlayerController,
-};
-use cs2_schema_cutl::EntityHandle;
-use cs2_schema_generated::cs2::client::{
-    C_BaseEntity,
-    C_CSPlayerPawn,
+use cs2::EntitySystem;
+use cs2_schema_generated::{
+    cs2::client::C_CSPlayerPawn,
+    EntityHandle,
 };
 use obfstr::obfstr;
 use overlay::UnicodeTextRenderer;
@@ -25,7 +20,7 @@ use crate::{
     settings::AppSettings,
     view::{
         KeyToggle,
-        StateLocalCrosshair,
+        LocalCrosshair,
     },
     UpdateContext,
 };
@@ -54,9 +49,8 @@ impl TriggerBot {
 
     fn should_be_active(&self, ctx: &UpdateContext) -> anyhow::Result<bool> {
         let settings = ctx.states.resolve::<AppSettings>(())?;
-        let crosshair = ctx.states.resolve::<StateLocalCrosshair>(())?;
-        let entities = ctx.states.resolve::<StateEntityList>(())?;
-        let memory = ctx.states.resolve::<StateCS2Memory>(())?;
+        let crosshair = ctx.states.resolve::<LocalCrosshair>(())?;
+        let entities = ctx.states.resolve::<EntitySystem>(())?;
 
         let target = match crosshair.current_target() {
             Some(target) => target,
@@ -74,22 +68,22 @@ impl TriggerBot {
 
         if settings.trigger_bot_team_check {
             let crosshair_entity = entities
-                .entity_from_handle(&EntityHandle::<dyn C_CSPlayerPawn>::from_index(
+                .get_by_handle(&EntityHandle::<C_CSPlayerPawn>::from_index(
                     target.entity_id,
-                ))
+                ))?
                 .context("missing crosshair player pawn")?
-                .value_reference(memory.view_arc())
-                .context("entity nullptr")?;
+                .entity()?
+                .read_schema()?;
 
-            let local_player_controller = ctx.states.resolve::<StateLocalPlayerController>(())?;
-            let Some(local_player_controller) = local_player_controller
-                .instance
-                .value_reference(memory.view_arc())
-            else {
+            let local_player_controller = entities.get_local_player_controller()?;
+            if local_player_controller.is_null()? {
                 return Ok(false);
-            };
+            }
 
-            if crosshair_entity.m_iTeamNum()? == local_player_controller.m_iTeamNum()? {
+            let local_player_controller = local_player_controller.reference_schema()?;
+
+            let target_player = crosshair_entity.as_schema::<C_CSPlayerPawn>()?;
+            if target_player.m_iTeamNum()? == local_player_controller.m_iTeamNum()? {
                 return Ok(false);
             }
         }

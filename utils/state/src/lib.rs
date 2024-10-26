@@ -54,9 +54,7 @@ pub trait State: Any + Sized + Send {
     }
 
     /// Return how the state should be cached
-    fn cache_type() -> StateCacheType {
-        StateCacheType::Volatile
-    }
+    fn cache_type() -> StateCacheType;
 
     /// Update the state
     fn update(&mut self, _states: &StateRegistry) -> anyhow::Result<()> {
@@ -279,7 +277,7 @@ impl StateRegistry {
                     cache_key,
                     cache_type: T::cache_type(),
 
-                    dirty: true,
+                    dirty: false,
                     last_access: Instant::now(),
                 });
 

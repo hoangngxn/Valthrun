@@ -3,8 +3,7 @@ use clap::Parser;
 use cs2::{
     offsets_runtime,
     CS2Handle,
-    StateCS2Handle,
-    StateCS2Memory,
+    CS2HandleState,
 };
 use radar_client::{
     CS2RadarGenerator,
@@ -36,11 +35,11 @@ async fn main() -> anyhow::Result<()> {
 
     let radar_generator = {
         let cs2 = CS2Handle::create(true)?;
-        let mut states = StateRegistry::new(1024 * 8);
-        states.set(StateCS2Memory::new(cs2.create_memory_view()), ())?;
-        states.set(StateCS2Handle::new(cs2), ())?;
+        offsets_runtime::setup_provider(&cs2)?;
 
-        offsets_runtime::setup_provider(&states)?;
+        let mut states = StateRegistry::new(1024 * 8);
+        states.set(CS2HandleState::new(cs2), ())?;
+
         Box::new(CS2RadarGenerator::new(states)?)
     };
     let radar_client = WebRadarPublisher::connect(radar_generator, &url).await?;

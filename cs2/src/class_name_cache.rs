@@ -1,7 +1,17 @@
 use std::collections::BTreeMap;
 
-use anyhow::Context;
-use cs2_schema_declaration::Ptr;
+use anyhow::{
+    anyhow,
+    Context,
+};
+use cs2_schema_cutl::{
+    CStringUtil,
+    PtrCStr,
+};
+use raw_struct::{
+    builtins::Ptr64,
+    FromMemoryView,
+};
 use utils_state::{
     State,
     StateCacheType,
@@ -11,8 +21,8 @@ use utils_state::{
 use crate::{
     CEntityIdentityEx,
     CS2Handle,
-    CS2HandleState,
-    EntitySystem,
+    StateCS2Handle,
+    StateEntityList,
 };
 
 pub struct ClassNameCache {
@@ -35,9 +45,9 @@ impl State for ClassNameCache {
     }
 
     fn update(&mut self, states: &StateRegistry) -> anyhow::Result<()> {
-        let cs2 = states.resolve::<CS2HandleState>(())?;
-        let entities = states.resolve::<EntitySystem>(())?;
-        for identity in entities.all_identities() {
+        let cs2 = states.resolve::<StateCS2Handle>(())?;
+        let entities = states.resolve::<StateEntityList>(())?;
+        for identity in entities.entities() {
             self.register_class_info(&cs2, identity.entity_class_info()?)
                 .with_context(|| {
                     format!(
@@ -51,21 +61,34 @@ impl State for ClassNameCache {
 }
 
 impl ClassNameCache {
-    fn register_class_info(&mut self, cs2: &CS2Handle, class_info: Ptr<()>) -> anyhow::Result<()> {
-        let address = class_info.address()?;
+    fn register_class_info(
+        &mut self,
+        cs2: &CS2Handle,
+        class_info: Ptr64<()>,
+    ) -> anyhow::Result<()> {
+        let address = class_info.address;
         if self.lookup.contains_key(&address) {
             /* we already know the name for this class */
             return Ok(());
         }
 
-        let class_name = cs2.read_string(&[address + 0x28, 0x08, 0x00], Some(32))?;
+        let memory = cs2.create_memory_view();
+
+        let class_name = PtrCStr::read_object(
+            &*memory,
+            u64::read_object(&*memory, address + 0x28).map_err(|e| anyhow!(e))? + 0x08,
+        )
+        .map_err(|e| anyhow!(e))?
+        .read_string(&*memory)?
+        .context("failed to read class name")?;
+
         self.lookup.insert(address, class_name.clone());
         self.reverse_lookup.insert(class_name, address);
         Ok(())
     }
 
-    pub fn lookup(&self, class_info: &Ptr<()>) -> anyhow::Result<Option<&String>> {
-        let address = class_info.address()?;
+    pub fn lookup(&self, class_info: &Ptr64<()>) -> anyhow::Result<Option<&String>> {
+        let address = class_info.address;
         Ok(self.lookup.get(&address))
     }
 

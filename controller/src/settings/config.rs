@@ -12,7 +12,7 @@ use std::{
     sync::atomic::{
         AtomicUsize,
         Ordering,
-    },
+    }, 
 };
 
 use anyhow::Context;
@@ -77,10 +77,6 @@ fn default_aimbot_mode() -> KeyToggleMode {
 
 fn default_key_aimbot() -> Option<HotKey> {
     Some(Key::MouseLeft.into())
-}
-
-fn default_key_aimbot_secondary() -> Option<HotKey> {
-    Some(Key::MouseRight.into())
 }
 
 fn default_aim_bone() -> String {
@@ -237,11 +233,6 @@ pub struct AppSettings {
     #[serde(default = "default_key_aimbot")]
     pub key_aimbot: Option<HotKey>,
 
-    #[serde(default = "default_key_aimbot_secondary")]
-    pub key_aimbot_secondary: Option<HotKey>,
-
-    #[serde(default = "bool_true")]
-    pub aimbot_team_check: bool,
 
     #[serde(default = "default_f32::<5, 1>")]
     pub aimbot_fov: f32,
@@ -254,6 +245,13 @@ pub struct AppSettings {
 
     #[serde(default = "default_aim_bone")]
     pub aim_bone: String,
+
+    // Advanced properties
+    #[serde(default = "bool_true")]
+    pub aimbot_team_check: bool,
+
+    #[serde(default = "bool_true")]
+    pub aimbot_view_fov: bool, 
 
     #[serde(default = "bool_true")]
     pub trigger_bot_team_check: bool,

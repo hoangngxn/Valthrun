@@ -1,7 +1,18 @@
 use std::time::Duration;
 
-use cs2_schema_declaration::Ptr;
+use anyhow::{
+    anyhow,
+    Context,
+};
+use cs2_schema_cutl::{
+    CStringUtil,
+    PtrCStr,
+};
 use obfstr::obfstr;
+use raw_struct::{
+    FromMemoryView,
+    Reference,
+};
 use utils_state::{
     State,
     StateCacheType,
@@ -9,9 +20,10 @@ use utils_state::{
 };
 
 use crate::{
-    offsets_manual,
+    schema::CModel,
     CS2Handle,
-    CS2HandleState,
+    StateCS2Handle,
+    StateCS2Memory,
 };
 
 pub enum BoneFlags {
@@ -62,10 +74,16 @@ impl State for CS2Model {
     type Parameter = u64;
 
     fn create(states: &StateRegistry, address: Self::Parameter) -> anyhow::Result<Self> {
-        let cs2 = states.resolve::<CS2HandleState>(())?;
+        let memory = states.resolve::<StateCS2Memory>(())?;
+        let cs2 = states.resolve::<StateCS2Handle>(())?;
         let mut result: Self = Default::default();
 
-        result.name = cs2.read_string(&[address + 0x08, 0], Some(32))?;
+        let name = PtrCStr::read_object(memory.view(), address + 0x08)
+            .map_err(|e| anyhow!(e))?
+            .read_string(memory.view())?
+            .context("model name nullptr")?;
+
+        result.name = name;
         log::debug!(
             "{} {} at {:X}. Caching.",
             obfstr!("Reading player model"),
@@ -84,16 +102,18 @@ impl State for CS2Model {
 
 impl CS2Model {
     fn do_read(&mut self, cs2: &CS2Handle, address: u64) -> anyhow::Result<()> {
+        let memory = cs2.create_memory_view();
+        let memory_view = &*memory;
+
         [
             self.vhull_min,
             self.vhull_max,
             self.vview_min,
             self.vview_max,
-        ] = cs2.read_sized::<[nalgebra::Vector3<f32>; 4]>(&[address + 0x18])?;
+        ] = cs2.read_sized::<[nalgebra::Vector3<f32>; 4]>(address + 0x18)?;
 
-        let bone_count = cs2.reference_schema::<u32>(&[address
-            + offsets_manual::client::CModel::BONE_NAME
-            - 0x08])? as usize;
+        let model = Reference::<dyn CModel>::new(memory.clone(), address);
+        let bone_count = model.bone_count()? as usize;
         if bone_count > 6000 {
             anyhow::bail!(
                 "{} ({})",
@@ -103,30 +123,16 @@ impl CS2Model {
         }
 
         log::trace!("Reading {} bones", bone_count);
-        let model_bone_flags = cs2
-            .reference_schema::<Ptr<[u32]>>(
-                &[address + offsets_manual::client::CModel::BONE_FLAGS],
-            )?
-            .read_entries(bone_count)?;
-
-        let model_bone_parent_index = cs2
-            .reference_schema::<Ptr<[u16]>>(&[
-                address + offsets_manual::client::CModel::BONE_PARENT
-            ])?
-            .read_entries(bone_count)?;
+        let model_bone_flags = model.bone_flags()?.elements(memory_view, 0..bone_count)?;
+        let model_bone_parent_index = model.bone_parents()?.elements(memory_view, 0..bone_count)?;
+        let bone_names_ptr = model.bone_names()?.elements(memory_view, 0..bone_count)?;
 
         self.bones.clear();
         self.bones.reserve(bone_count);
         for bone_index in 0..bone_count {
-            let name = cs2.read_string(
-                &[
-                    address + offsets_manual::client::CModel::BONE_NAME,
-                    0x08 * bone_index as u64,
-                    0,
-                ],
-                None,
-            )?;
-
+            let name = bone_names_ptr[bone_index]
+                .read_string(memory_view)?
+                .context("missing bone name")?;
             let parent_index = model_bone_parent_index[bone_index];
             let flags = model_bone_flags[bone_index];
 

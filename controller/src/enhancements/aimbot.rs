@@ -160,15 +160,6 @@ impl Aimbot {
         }])?;
         Ok(true)
     }
-
-    pub fn on_mouse_pressed(&mut self) {
-        self.aimbot_is_mouse_pressed = true;
-    }
-
-    pub fn on_mouse_released(&mut self) {
-        self.aimbot_is_mouse_pressed = false;
-        self.aimbot_current_target = None;
-    }
 }
 
 impl Enhancement for Aimbot {
@@ -180,7 +171,7 @@ impl Enhancement for Aimbot {
         self.aim_bone = settings.aim_bone.to_lowercase();
         self.aimbot_team_check = settings.aimbot_team_check;
     
-        if self.toggle.update(&settings.aimbot_mode, ctx.input, &settings.key_aimbot) {
+        if self.toggle.update_dual(&settings.aimbot_mode, ctx.input, &settings.key_aimbot, &settings.key_aimbot_secondary) {
             ctx.cs2.add_metrics_record(
                 obfstr!("feature-aimbot-toggle"),
                 &format!("enabled: {}, mode: {:?}", self.toggle.enabled, settings.aimbot_mode),

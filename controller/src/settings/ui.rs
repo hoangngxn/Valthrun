@@ -310,6 +310,7 @@ impl SettingsUI {
                         ], &mut settings.aimbot_mode);
                     
                         ui.button_key_optional(obfstr!("Primary Aimbot Key"), &mut settings.key_aimbot, [150.0, 0.0]);
+                        ui.button_key_optional(obfstr!("Secondary Aimbot Key"), &mut settings.key_aimbot_secondary, [150.0, 0.0]);
                     
                         ui.set_next_item_width(200.0);
                         ui.slider_config("FOV", 1.0, 30.0).display_format("%.1f").build(&mut settings.aimbot_fov);

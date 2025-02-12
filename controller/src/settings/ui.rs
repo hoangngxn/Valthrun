@@ -316,12 +316,12 @@ impl SettingsUI {
                         ui.slider_config("FOV", 1.0, 30.0).display_format("%.1f").build(&mut settings.aimbot_fov);
                     
                         ui.set_next_item_width(200.0);
-                        ui.slider_config("Aim Speed X", 1.0, 20.0)
+                        ui.slider_config("Aim Speed X", 1.0, 50.0)
                         .display_format("%.1f")
                         .build(&mut settings.aimbot_speed_x);
 
                         ui.set_next_item_width(200.0);
-                        ui.slider_config("Aim Speed Y", 1.0, 20.0)
+                        ui.slider_config("Aim Speed Y", 1.0, 50.0)
                         .display_format("%.1f")
                         .build(&mut settings.aimbot_speed_y);
 

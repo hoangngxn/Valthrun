@@ -48,6 +48,7 @@ use super::{
     EspConfig,
     EspSelector,
     GrenadeSettings,
+    GrenadeSortOrder,
     GrenadeSpotInfo,
     GrenadeType,
     KeyToggleMode,
@@ -122,8 +123,10 @@ enum GrenadeHelperTransferState {
         direction: GrenadeHelperTransferDirection,
     },
     /// A transfer has been initiated.
-    /// This might be ether an export or import.
-    Active {},
+    /// This might be either an export or import.
+    Active {
+        direction: GrenadeHelperTransferDirection,
+    },
     /// The current transfer failed.
     Failed {
         direction: GrenadeHelperTransferDirection,
@@ -136,6 +139,7 @@ enum GrenadeHelperTransferState {
     },
     ImportSuccess {
         count: usize,
+        replacing: bool,
     },
     ExportSuccess {
         target_path: PathBuf,
@@ -197,6 +201,7 @@ impl SettingsUI {
 
         ui.window(obfstr!("Valthrun"))
             .size([650.0, 300.0], Condition::FirstUseEver)
+            .size_constraints([650.0, 300.0], [2000.0, 2000.0])
             .title_bar(false)
             .build(|| {
                 {
@@ -388,7 +393,7 @@ impl SettingsUI {
                             ui.separator();
                         }
 
-                        ui.checkbox("Simle Recoil Helper", &mut settings.aim_assist_recoil);
+                        ui.checkbox("Simple Recoil Helper", &mut settings.aim_assist_recoil);
                     }
 
                     if let Some(_) = ui.tab_item("Web Radar") {
@@ -1503,6 +1508,21 @@ impl SettingsUI {
         /* The list itself */
         {
             ui.text("Available spots");
+            let text_width = ui.calc_text_size("Available spots")[0];
+            let button_width = tree_width - text_width - original_style.item_spacing[0];
+
+            ui.same_line();
+
+            ui.set_next_item_width(button_width);
+            ui.combo_enum(
+                "##sort_type",
+                &[
+                    (GrenadeSortOrder::Alphabetical, "A-z"),
+                    (GrenadeSortOrder::AlphabeticalReverse, "Z-a"),
+                ],
+                &mut settings.ui_sort_order,
+            );
+
             if let (Some(_token), _padding) = {
                 let padding = ui.push_style_var(StyleVar::WindowPadding([
                     0.0,
@@ -1514,7 +1534,7 @@ impl SettingsUI {
                         tree_width,
                         content_region[1]
                             - ui.text_line_height_with_spacing() * 2.0
-                            - original_style.frame_padding[1] * 2.0,
+                            - original_style.frame_padding[1] * 4.0,
                     ])
                     .border(true)
                     .draw_background(true)
@@ -1526,9 +1546,8 @@ impl SettingsUI {
                 ui.indent_by(original_style.window_padding[0]);
 
                 if let Some(grenades) = settings.map_spots.get(map_name) {
-                    // Sort grenades alphabetically by name
-                    let mut sorted_grenades = grenades.clone();
-                    sorted_grenades.sort_by(|a, b| a.name.cmp(&b.name));
+                    let mut sorted_grenades = grenades.iter().collect::<Vec<_>>();
+                    settings.ui_sort_order.sort(&mut sorted_grenades);
 
                     for grenade in sorted_grenades.iter() {
                         let grenade_types = grenade
@@ -1881,6 +1900,11 @@ impl SettingsUI {
             "Color angle  (active)",
             &mut settings.color_angle_active,
         );
+
+        ui.checkbox(
+            obfstr!("ViewBox Background"),
+            &mut settings.grenade_background,
+        );
     }
 
     fn render_grenade_helper_transfer(&mut self, settings: &mut GrenadeSettings, ui: &imgui::Ui) {
@@ -1957,9 +1981,11 @@ impl SettingsUI {
                         }
                     }
                 });
-                *transfer_state = GrenadeHelperTransferState::Active {};
+                *transfer_state = GrenadeHelperTransferState::Active {
+                    direction: direction.clone(),
+                };
             }
-            GrenadeHelperTransferState::Active {} => {
+            GrenadeHelperTransferState::Active { .. } => {
                 /* Just waiting for the file picker to finish. */
             }
 
@@ -1999,8 +2025,10 @@ impl SettingsUI {
                     ui.same_line();
                     if ui.button_with_size("Yes", [button_width, 0.0]) {
                         settings.map_spots = elements.clone();
-                        *transfer_state =
-                            GrenadeHelperTransferState::ImportSuccess { count: total_count };
+                        *transfer_state = GrenadeHelperTransferState::ImportSuccess {
+                            count: total_count,
+                            replacing: false,
+                        };
                     }
                 } else {
                     ui.open_popup("Data Import");
@@ -2069,7 +2097,7 @@ impl SettingsUI {
             GrenadeHelperTransferState::ImportSuccess { count, .. } => {
                 let mut popup_open = true;
                 if let Some(_popup) = ui
-                    .modal_popup_config("Import successfull")
+                    .modal_popup_config("Import successful")
                     .opened(&mut popup_open)
                     .always_auto_resize(true)
                     .begin_popup()

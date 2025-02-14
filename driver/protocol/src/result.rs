@@ -8,5 +8,6 @@ bitflags! {
 
         const CommandInvalid = 0x10;
         const CommandParameterInvalid = 0x11;
+        const CommandFeatureUnsupported = 0x12;
     }
 }

@@ -1,8 +1,8 @@
 mod init;
 pub use init::*;
 
-mod modules;
-pub use modules::*;
+mod process;
+pub use process::*;
 
 mod memory_read;
 pub use memory_read::*;
@@ -22,39 +22,33 @@ pub use input_mouse::*;
 mod process_protection;
 pub use process_protection::*;
 
+mod cr3;
+pub use cr3::*;
+
 pub trait DriverCommand: Default + Copy {
     const COMMAND_ID: u32;
 }
 
-impl DriverCommand for DriverCommandInitialize {
-    /* this command id should always be the same */
-    const COMMAND_ID: u32 = 0x00;
+macro_rules! define_command {
+    ($struct:ty, $id:expr) => {
+        impl DriverCommand for $struct {
+            const COMMAND_ID: u32 = $id;
+        }
+    };
 }
 
-impl DriverCommand for DriverCommandProcessModules {
-    const COMMAND_ID: u32 = 0x01;
-}
+/* this command id should always be the same */
+define_command!(DriverCommandInitialize, 0x00);
 
-impl DriverCommand for DriverCommandProcessMemoryRead {
-    const COMMAND_ID: u32 = 0x02;
-}
+define_command!(DriverCommandProcessList, 0x01);
+define_command!(DriverCommandProcessModules, 0x02);
+define_command!(DriverCommandMemoryRead, 0x03);
+define_command!(DriverCommandMemoryWrite, 0x04);
 
-impl DriverCommand for DriverCommandProcessMemoryWrite {
-    const COMMAND_ID: u32 = 0x03;
-}
+define_command!(DriverCommandInputKeyboard, 0x05);
+define_command!(DriverCommandInputMouse, 0x06);
+define_command!(DriverCommandMetricsReportSend, 0x07);
+define_command!(DriverCommandProcessProtection, 0x08);
 
-impl DriverCommand for DriverCommandInputKeyboard {
-    const COMMAND_ID: u32 = 0x04;
-}
-
-impl DriverCommand for DriverCommandInputMouse {
-    const COMMAND_ID: u32 = 0x05;
-}
-
-impl DriverCommand for DriverCommandMetricsReportSend {
-    const COMMAND_ID: u32 = 0x06;
-}
-
-impl DriverCommand for DriverCommandProcessProtection {
-    const COMMAND_ID: u32 = 0x07;
-}
+define_command!(DriverCommandCr3ShenanigansEnable, 0x09);
+define_command!(DriverCommandCr3ShenanigansDisable, 0x0A);

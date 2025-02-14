@@ -282,7 +282,7 @@ impl DriverInterface {
         &self,
         process_id: ProcessId,
         directory_table_type: DirectoryTableType,
-
+        
         address: u64,
         buffer: &mut [T],
     ) -> IResult<()> {
@@ -308,6 +308,9 @@ impl DriverInterface {
                     command.count,
                     bytes_copied
                 );
+                Err(InterfaceError::MemoryAccessFailed)
+            }
+            MemoryAccessResult::SourcePagedOut | MemoryAccessResult::DestinationPagedOut => {
                 Err(InterfaceError::MemoryAccessFailed)
             }
         }
@@ -353,6 +356,9 @@ impl DriverInterface {
             MemoryAccessResult::Success => Ok(()),
             MemoryAccessResult::ProcessUnknown => Err(InterfaceError::ProcessUnknown),
             MemoryAccessResult::PartialSuccess { .. } => Err(InterfaceError::MemoryAccessFailed),
+            MemoryAccessResult::SourcePagedOut | MemoryAccessResult::DestinationPagedOut => {
+                Err(InterfaceError::MemoryAccessFailed)
+            }
         }
     }
 

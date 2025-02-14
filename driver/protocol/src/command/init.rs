@@ -49,7 +49,7 @@ pub enum InitializeResult {
     Success,
 
     /// The driver is not available.
-    /// E.g. the kerne component has not been mapped.
+    /// E.g. the kernel component has not been mapped.
     Unavailable,
 }
 

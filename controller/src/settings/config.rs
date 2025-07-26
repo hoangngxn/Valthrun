@@ -87,6 +87,26 @@ fn default_aimbot_bone_target() -> BoneTarget {
     BoneTarget::Head
 }
 
+fn default_aimbot_fov_radius() -> f32 {
+    100.0
+}
+
+fn default_aimbot_smoothness_x() -> f32 {
+    10.0
+}
+
+fn default_aimbot_smoothness_y() -> f32 {
+    10.0
+}
+
+fn default_aimbot_rcs_x() -> f32 {
+    1.0
+}
+
+fn default_aimbot_rcs_y() -> f32 {
+    1.0
+}
+
 fn default_esp_configs() -> BTreeMap<String, EspConfig> {
     let mut result: BTreeMap<String, EspConfig> = Default::default();
     result.insert(
@@ -301,35 +321,43 @@ pub struct AppSettings {
     #[serde(default = "default_key_aimbot")]
     pub key_aimbot: Option<HotKey>,
 
-    #[serde(default = "bool_true")]
-    pub aimbot_team_check: bool,
-
-    #[serde(default = "default_f32::<100, 1>")]
+    /// FOV radius for aimbot target detection (in pixels)
+    #[serde(default = "default_aimbot_fov_radius")]
     pub aimbot_fov_radius: f32,
 
-    #[serde(default = "default_f32::<10, 1>")]
+    /// Aimbot smoothness horizontal axis
+    #[serde(default = "default_aimbot_smoothness_x")]
     pub aimbot_smoothness_x: f32,
 
-    #[serde(default = "default_f32::<10, 1>")]
+    /// Aimbot smoothness vertical axis  
+    #[serde(default = "default_aimbot_smoothness_y")]
     pub aimbot_smoothness_y: f32,
 
-    #[serde(default = "bool_false")]
+    /// Show FOV circle
+    #[serde(default)]
     pub aimbot_show_fov: bool,
 
     #[serde(default = "default_aimbot_bone_target")]
     pub aimbot_bone_target: BoneTarget,
 
-    #[serde(default = "bool_false")]
+    /// Show debug window
+    #[serde(default)]
     pub aimbot_show_debug: bool,
 
-    #[serde(default = "default_f32::<5, 1>")]
-    pub aimbot_lock_strength: f32,
+    /// Enable RCS (Recoil Control System) for aimbot
+    #[serde(default)]
+    pub aimbot_rcs_enabled: bool,
+
+    /// RCS horizontal compensation strength (0.0 to 2.0)
+    #[serde(default = "default_aimbot_rcs_x")]
+    pub aimbot_rcs_x: f32,
+
+    /// RCS vertical compensation strength (0.0 to 2.0)  
+    #[serde(default = "default_aimbot_rcs_y")]
+    pub aimbot_rcs_y: f32,
 
     #[serde(default = "bool_true")]
-    pub aimbot_distance_scaling: bool,
-
-    #[serde(default = "bool_true")]
-    pub aimbot_strict_boundary: bool,
+    pub aimbot_team_check: bool,
 
     #[serde(default = "bool_true")]
     pub hide_overlay_from_screen_capture: bool,

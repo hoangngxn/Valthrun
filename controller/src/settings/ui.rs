@@ -370,64 +370,65 @@ impl SettingsUI {
                         if !matches!(settings.aimbot_mode, KeyToggleMode::Off) {
                             ui.separator();
                             
-                            ui.text(obfstr!("Target Selection"));
-                            ui.set_next_item_width(200.0);
-                            ui.combo_enum(obfstr!("Target Bone"), &[
-                                (BoneTarget::Head, "Head"),
-                                (BoneTarget::Neck, "Neck"),
-                                (BoneTarget::Chest, "Chest"),
-                                (BoneTarget::Stomach, "Stomach"),
-                                (BoneTarget::Closest, "Closest to Crosshair"),
-                            ], &mut settings.aimbot_bone_target);
-
+                            ui.text(obfstr!("Bone Target"));
+                            let bone_targets = [
+                                BoneTarget::Head.display_name(),
+                                BoneTarget::Neck.display_name(),
+                                BoneTarget::Chest.display_name(),
+                                BoneTarget::Stomach.display_name(),
+                                BoneTarget::Closest.display_name(),
+                            ];
+                            let mut current_bone_index = match settings.aimbot_bone_target {
+                                BoneTarget::Head => 0,
+                                BoneTarget::Neck => 1,
+                                BoneTarget::Chest => 2,
+                                BoneTarget::Stomach => 3,
+                                BoneTarget::Closest => 4,
+                            };
+                            if ui.combo_simple_string(obfstr!("##bone_target"), &mut current_bone_index, &bone_targets) {
+                                settings.aimbot_bone_target = match current_bone_index {
+                                    0 => BoneTarget::Head,
+                                    1 => BoneTarget::Neck,
+                                    2 => BoneTarget::Chest,
+                                    3 => BoneTarget::Stomach,
+                                    4 => BoneTarget::Closest,
+                                    _ => BoneTarget::Head,
+                                };
+                            }
+                            
                             ui.separator();
-                            
-                            ui.text(obfstr!("FOV Settings"));
-                            ui.slider_config(obfstr!("FOV Radius"), 10.0, 500.0)
+                            ui.text(obfstr!("Aim Settings"));
+                            ui.slider_config(obfstr!("FOV Radius"), 10.0, 300.0)
+                                .display_format(obfstr!("%.0f px"))
                                 .build(&mut settings.aimbot_fov_radius);
-                            
                             ui.checkbox(obfstr!("Show FOV Circle"), &mut settings.aimbot_show_fov);
                             ui.checkbox(obfstr!("Show Debug Window"), &mut settings.aimbot_show_debug);
-
+                            
                             ui.separator();
-                            
-                            ui.text(obfstr!("Smoothness Settings"));
-                            ui.slider_config(obfstr!("Smoothness X"), 1.0, 50.0)
+                            ui.text(obfstr!("Smoothness"));
+                            ui.slider_config(obfstr!("Horizontal Smoothness"), 1.0, 50.0)
+                                .display_format(obfstr!("%.1f"))
                                 .build(&mut settings.aimbot_smoothness_x);
-                            
-                            ui.slider_config(obfstr!("Smoothness Y"), 1.0, 50.0)
+                            ui.slider_config(obfstr!("Vertical Smoothness"), 1.0, 50.0)
+                                .display_format(obfstr!("%.1f"))
                                 .build(&mut settings.aimbot_smoothness_y);
 
                             ui.separator();
+                            ui.text(obfstr!("Recoil Control System (RCS)"));
+                            ui.checkbox(obfstr!("Enable RCS"), &mut settings.aimbot_rcs_enabled);
                             
-                            ui.text(obfstr!("Accuracy Settings"));
-                            ui.slider_config(obfstr!("Lock Strength"), 1.0, 20.0)
-                                .display_format("%.1f")
-                                .build(&mut settings.aimbot_lock_strength);
-                            
-                            if ui.is_item_hovered() {
-                                ui.tooltip_text("Lower = stricter lock (less mouse freedom)\nHigher = looser lock (more mouse freedom)");
-                            }
-                            
-                            ui.checkbox(obfstr!("Distance Scaling"), &mut settings.aimbot_distance_scaling);
-                            
-                            if ui.is_item_hovered() {
-                                ui.tooltip_text("Adjusts lock tolerance based on target distance\nFar targets = smaller tolerance (more precise)\nClose targets = larger tolerance (more freedom)");
-                            }
-                            
-                            ui.checkbox(obfstr!("Strict Boundary"), &mut settings.aimbot_strict_boundary);
-                            
-                            if ui.is_item_hovered() {
-                                ui.tooltip_text("Enforces the green tolerance circle as a hard boundary\nPrevents mouse movement outside the circle");
-                            }
+                            let _enabled = ui.begin_enabled(settings.aimbot_rcs_enabled);
+                            ui.slider_config(obfstr!("RCS Horizontal Strength"), 0.0, 2.0)
+                                .display_format(obfstr!("%.2f"))
+                                .build(&mut settings.aimbot_rcs_x);
+                            ui.slider_config(obfstr!("RCS Vertical Strength"), 0.0, 2.0)
+                                .display_format(obfstr!("%.2f"))
+                                .build(&mut settings.aimbot_rcs_y);
 
                             ui.separator();
-                            
                             ui.checkbox(obfstr!("Team Check"), &mut settings.aimbot_team_check);
-                            
-                            ui.separator();
-                            
-                            if ui.button(obfstr!("Reset to Defaults")) {
+
+                            if ui.button(obfstr!("Reset to defaults")) {
                                 settings.aimbot_fov_radius = 100.0;
                                 settings.aimbot_smoothness_x = 10.0;
                                 settings.aimbot_smoothness_y = 10.0;
@@ -435,9 +436,9 @@ impl SettingsUI {
                                 settings.aimbot_show_fov = false;
                                 settings.aimbot_show_debug = false;
                                 settings.aimbot_bone_target = BoneTarget::Head;
-                                settings.aimbot_lock_strength = 5.0;
-                                settings.aimbot_distance_scaling = true;
-                                settings.aimbot_strict_boundary = true;
+                                settings.aimbot_rcs_enabled = false;
+                                settings.aimbot_rcs_x = 1.0;
+                                settings.aimbot_rcs_y = 1.0;
                             }
                         }
                     }

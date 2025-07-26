@@ -37,8 +37,7 @@ pub struct AimBot {
     last_target_entity_id: Option<u32>,
     last_smoothing_time: Instant,
     current_target_position: Option<Vector3<f32>>,
-    is_paused_by_settings: bool,
-    boundary_enforced: bool,
+    last_rcs_values: Option<(f32, f32)>,
 }
 
 impl AimBot {
@@ -48,8 +47,7 @@ impl AimBot {
             last_target_entity_id: None,
             last_smoothing_time: Instant::now(),
             current_target_position: None,
-            is_paused_by_settings: false,
-            boundary_enforced: false,
+            last_rcs_values: None,
         }
     }
 
@@ -256,7 +254,7 @@ impl AimBot {
             }
 
             // Calculate world distance for scaling
-            let world_distance = (target_position - local_position).norm();
+            let _world_distance = (target_position - local_position).norm();
 
             // Prefer closer targets to crosshair
             if screen_distance < best_distance {
@@ -265,8 +263,6 @@ impl AimBot {
                     entity_id: entity_identity.handle::<()>()?.get_entity_index(),
                     target_position,
                     screen_position: [screen_pos.x, screen_pos.y],
-                    distance_to_crosshair: screen_distance,
-                    world_distance,
                 });
             }
         }
@@ -274,31 +270,81 @@ impl AimBot {
         Ok(best_target)
     }
 
-    fn calculate_smooth_movement(
+    fn calculate_smooth_movement_with_rcs(
         &mut self,
         target_screen_pos: [f32; 2],
         screen_center: [f32; 2],
         settings: &AppSettings,
-        world_distance: f32,
+        rcs_compensation: Option<(f32, f32)>,
     ) -> (i32, i32) {
-        let delta_x = target_screen_pos[0] - screen_center[0];
-        let delta_y = target_screen_pos[1] - screen_center[1];
+        // Calculate deltas exactly like C++
+        let mut delta_x = target_screen_pos[0] - screen_center[0];
+        let mut delta_y = target_screen_pos[1] - screen_center[1];
 
-        // Apply smoothing with optional distance scaling
-        let mut smooth_factor_x = settings.aimbot_smoothness_x.max(1.0);
-        let mut smooth_factor_y = settings.aimbot_smoothness_y.max(1.0);
-
-        if settings.aimbot_distance_scaling {
-            // Increase smoothing for longer distances (more gradual movement)
-            let distance_factor = (world_distance / 1500.0).clamp(1.0, 2.5);
-            smooth_factor_x *= distance_factor;
-            smooth_factor_y *= distance_factor;
+        // Apply RCS compensation exactly like C++: deltaX -= rcsX; deltaY -= rcsY
+        if let Some((rcs_x, rcs_y)) = rcs_compensation {
+            delta_x -= rcs_x;
+            delta_y -= rcs_y;
         }
+
+        // Apply smoothing (simpler logic without distance scaling)
+        let smooth_factor_x = settings.aimbot_smoothness_x.max(1.0);
+        let smooth_factor_y = settings.aimbot_smoothness_y.max(1.0);
 
         let mouse_move_x = (delta_x / smooth_factor_x) as i32;
         let mouse_move_y = (delta_y / smooth_factor_y) as i32;
 
         (mouse_move_x, mouse_move_y)
+    }
+
+    fn calculate_rcs_compensation(
+        &self,
+        ctx: &UpdateContext,
+    ) -> anyhow::Result<Option<(f32, f32)>> {
+        let settings = ctx.states.resolve::<AppSettings>(())?;
+        if !settings.aimbot_rcs_enabled {
+            return Ok(None);
+        }
+
+        let memory = ctx.states.resolve::<StateCS2Memory>(())?;
+        let entities = ctx.states.resolve::<StateEntityList>(())?;
+        let local_controller = ctx.states.resolve::<StateLocalPlayerController>(())?;
+        
+        let local_pawn_handle = match local_controller.instance.value_reference(memory.view_arc()) {
+            Some(local_controller) => local_controller.m_hPlayerPawn()?,
+            None => return Ok(None),
+        };
+
+        let local_pawn = entities
+            .entity_from_handle(&local_pawn_handle)
+            .context("missing local player pawn")?
+            .value_reference(memory.view_arc())
+            .context("nullptr")?;
+
+        let shots_fired = local_pawn.m_iShotsFired()?;
+        if shots_fired <= 1 {
+            return Ok(None);
+        }
+
+        // Get punch angle data (exact C++ logic)
+        let punch_angle = nalgebra::Vector3::from_row_slice(&local_pawn.m_aimPunchAngle()?[0..3]);
+        let punch_angle_vel = nalgebra::Vector3::from_row_slice(&local_pawn.m_aimPunchAngleVel()?[0..3]);
+        let _punch_tick_base = local_pawn.m_aimPunchTickBase()?;
+        let punch_tick_fraction = local_pawn.m_aimPunchTickFraction()?;
+        
+        // Calculate RCS exactly like C++: punchAngle * recoilControlSystem strength
+        let mut rcs_x = punch_angle.y * settings.aimbot_rcs_x; // Note: X uses Y component (yaw)
+        let mut rcs_y = punch_angle.x * settings.aimbot_rcs_y; // Note: Y uses X component (pitch)
+
+        // Add velocity compensation exactly like C++: punchAngleVel * punchTickFraction * 0.1f
+        rcs_x += punch_angle_vel.y * punch_tick_fraction * 0.1;
+        rcs_y += punch_angle_vel.x * punch_tick_fraction * 0.1;
+
+        // Note: Punch cache access requires more complex memory handling
+        // The core RCS logic above provides most of the recoil compensation benefit
+        // Cache smoothing can be added later if needed
+
+        Ok(Some((rcs_x, rcs_y)))
     }
 }
 
@@ -322,10 +368,7 @@ impl Enhancement for AimBot {
 
         // Pause aimbot when settings menu is open to prevent interference during configuration
         if ctx.settings_visible {
-            self.is_paused_by_settings = true;
             return Ok(());
-        } else {
-            self.is_paused_by_settings = false;
         }
 
         if !self.toggle.enabled {
@@ -350,65 +393,29 @@ impl Enhancement for AimBot {
         self.last_target_entity_id = Some(target.entity_id);
         self.current_target_position = Some(target.target_position);
 
-        // Calculate distance-based tolerance
-        let movement_tolerance = if settings.aimbot_distance_scaling {
-            // Scale tolerance based on distance - farther targets need more precision (smaller tolerance)
-            let base_tolerance = settings.aimbot_lock_strength;
-            let distance_factor = (1000.0 / target.world_distance.max(100.0)).clamp(0.3, 2.0); // Inverse scaling
-            base_tolerance * distance_factor
-        } else {
-            settings.aimbot_lock_strength
-        };
+        // Calculate RCS compensation
+        let rcs_compensation = self.calculate_rcs_compensation(ctx)?;
+        self.last_rcs_values = rcs_compensation;
 
-        // Reset boundary enforcement flag
-        self.boundary_enforced = false;
+        // Simple aimbot - smoothly aim towards target with RCS compensation
+        let (mouse_x, mouse_y) = self.calculate_smooth_movement_with_rcs(
+            target.screen_position,
+            screen_center,
+            &settings,
+            rcs_compensation,
+        );
 
-        // Boundary enforcement - prevent movement outside tolerance circle
-        if target.distance_to_crosshair > movement_tolerance {
-            self.boundary_enforced = true;
-            // Calculate the direction from target to current crosshair position
-            let delta_x = screen_center[0] - target.screen_position[0];
-            let delta_y = screen_center[1] - target.screen_position[1];
-            
-            // Normalize the direction
-            let distance = (delta_x * delta_x + delta_y * delta_y).sqrt();
-            if distance > 0.0 {
-                let norm_x = delta_x / distance;
-                let norm_y = delta_y / distance;
-                
-                // Calculate the boundary position (exactly at tolerance distance)
-                let boundary_x = target.screen_position[0] + norm_x * movement_tolerance;
-                let boundary_y = target.screen_position[1] + norm_y * movement_tolerance;
-                
-                // Calculate movement needed to reach boundary
-                let corrective_x = boundary_x - screen_center[0];
-                let corrective_y = boundary_y - screen_center[1];
-                
-                let (mouse_x, mouse_y) = if settings.aimbot_strict_boundary {
-                    // Strict mode: Move directly to boundary with minimal smoothing
-                    let min_smoothing = 2.0;
-                    ((corrective_x / min_smoothing) as i32, (corrective_y / min_smoothing) as i32)
-                } else {
-                    // Normal mode: Apply regular smoothing
-                    self.calculate_smooth_movement(
-                        [boundary_x, boundary_y],
-                        screen_center,
-                        &settings,
-                        target.world_distance,
-                    )
-                };
+        // Only move if the movement is significant enough to avoid micro-movements
+        let movement_threshold = 1;
+        if mouse_x.abs() >= movement_threshold || mouse_y.abs() >= movement_threshold {
+            let mouse_state = MouseState {
+                last_x: mouse_x,
+                last_y: mouse_y,
+                ..Default::default()
+            };
 
-                if mouse_x != 0 || mouse_y != 0 {
-                    let mouse_state = MouseState {
-                        last_x: mouse_x,
-                        last_y: mouse_y,
-                        ..Default::default()
-                    };
-
-                    ctx.cs2.send_mouse_state(&[mouse_state])?;
-                    self.last_smoothing_time = Instant::now();
-                }
-            }
+            ctx.cs2.send_mouse_state(&[mouse_state])?;
+            self.last_smoothing_time = Instant::now();
         }
 
         Ok(())
@@ -430,64 +437,22 @@ impl Enhancement for AimBot {
         _unicode_text: &UnicodeTextRenderer,
     ) -> anyhow::Result<()> {
         let settings = states.resolve::<AppSettings>(())?;
-        let view = states.resolve::<ViewController>(())?;
-
-        // Always draw FOV circle when enabled (regardless of aimbot toggle state)
-        if settings.aimbot_show_fov {
+        
+        // Only draw FOV circle when enabled AND aimbot is active
+        if settings.aimbot_show_fov && self.toggle.enabled {
+            let view = states.resolve::<ViewController>(())?;
             let draw_list = ui.get_window_draw_list();
             let screen_center = [
                 view.screen_bounds.x / 2.0,
                 view.screen_bounds.y / 2.0,
             ];
 
-            draw_list.add_circle(
-                screen_center,
-                settings.aimbot_fov_radius,
-                [1.0, 1.0, 1.0, 0.3],
-            )
-            .thickness(1.0)
-            .build();
-        }
-
-        if !self.toggle.enabled {
-            return Ok(());
-        }
-
-        // Draw tolerance circle to show the "dead zone"
-        if settings.aimbot_show_debug {
-            if let Some(target_pos) = &self.current_target_position {
-                if let Some(screen_pos) = view.world_to_screen(target_pos, false) {
-                    let draw_list = ui.get_window_draw_list();
-                    let pos = [screen_pos.x, screen_pos.y];
-                    
-                    let tolerance = if settings.aimbot_distance_scaling {
-                        let distance = if let Some(camera_pos) = view.get_camera_world_position() {
-                            (target_pos - camera_pos).norm()
-                        } else {
-                            1000.0
-                        };
-                        // Inverse scaling - smaller tolerance for farther targets
-                        let distance_factor = (1000.0 / distance.max(100.0)).clamp(0.3, 2.0);
-                        settings.aimbot_lock_strength * distance_factor
-                    } else {
-                        settings.aimbot_lock_strength
-                    };
-
-                    // Make circle more prominent when boundary is being enforced
-                    let (color, thickness) = if self.boundary_enforced {
-                        ([1.0, 0.5, 0.0, 0.6], 2.0) // Orange, thicker when enforcing
-                    } else {
-                        ([0.0, 1.0, 0.0, 0.3], 1.0) // Green, normal when not enforcing
-                    };
-
-                    draw_list.add_circle(
-                        pos,
-                        tolerance,
-                        color,
-                    )
-                    .thickness(thickness)
+            // Simple FOV circle drawing with error handling
+            if screen_center[0] > 0.0 && screen_center[1] > 0.0 && settings.aimbot_fov_radius > 0.0 {
+                draw_list
+                    .add_circle(screen_center, settings.aimbot_fov_radius, [1.0, 1.0, 1.0, 0.3])
+                    .thickness(1.0)
                     .build();
-                }
             }
         }
 
@@ -507,50 +472,45 @@ impl Enhancement for AimBot {
             return Ok(());
         }
 
-        let view = states.resolve::<ViewController>(())?;
-
+        // Simple debug window with minimal information to prevent freezing
+        let mut show_debug = settings.aimbot_show_debug;
         ui.window(obfstr!("Aimbot Debug"))
-            .size([300.0, 200.0], Condition::FirstUseEver)
+            .opened(&mut show_debug)
+            .size([280.0, 180.0], Condition::FirstUseEver)
             .build(|| {
-                ui.text(format!("Aimbot Enabled: {}", self.toggle.enabled));
-                ui.text(format!("Status: {}", if self.is_paused_by_settings { "Paused (Settings Open)" } else { "Running" }));
+                ui.text(format!("Aimbot Active: {}", self.toggle.enabled));
                 
                 if let Some(entity_id) = self.last_target_entity_id {
-                    ui.text(format!("Target Entity ID: {}", entity_id));
+                    ui.text(format!("Target ID: {}", entity_id));
                 } else {
-                    ui.text("No Target");
+                    ui.text("Target: None");
                 }
-                
-                if let Some(pos) = &self.current_target_position {
-                    ui.text(format!("Target Position: [{:.1}, {:.1}, {:.1}]", pos.x, pos.y, pos.z));
-                }
-                
-                let time_since_move = self.last_smoothing_time.elapsed().as_millis();
-                ui.text(format!("Last Mouse Move: {}ms ago", time_since_move));
-                ui.text(format!("Boundary Enforced: {}", if self.boundary_enforced { "YES" } else { "No" }));
                 
                 ui.separator();
-                ui.text(format!("Bone Target: {}", settings.aimbot_bone_target.display_name()));
-                ui.text(format!("FOV Radius: {:.0}px", settings.aimbot_fov_radius));
-                ui.text(format!("Smoothness: X={:.1}, Y={:.1}", settings.aimbot_smoothness_x, settings.aimbot_smoothness_y));
-                ui.text(format!("Lock Strength: {:.1}", settings.aimbot_lock_strength));
-                ui.text(format!("Distance Scaling: {}", if settings.aimbot_distance_scaling { "On" } else { "Off" }));
-                ui.text(format!("Strict Boundary: {}", if settings.aimbot_strict_boundary { "On" } else { "Off" }));
+                ui.text(format!("FOV: {:.0}px", settings.aimbot_fov_radius));
+                ui.text(format!("Smoothness: {:.1}, {:.1}", 
+                    settings.aimbot_smoothness_x, settings.aimbot_smoothness_y));
                 
-                if let Some(pos) = &self.current_target_position {
-                    if let Some(camera_pos) = view.get_camera_world_position() {
-                        let distance = (pos - camera_pos).norm();
-                        ui.text(format!("Target Distance: {:.0} units", distance));
-                        
-                        if settings.aimbot_distance_scaling {
-                            // Use inverse scaling - smaller tolerance for farther targets
-                            let distance_factor = (1000.0 / distance.max(100.0)).clamp(0.3, 2.0);
-                            let effective_tolerance = settings.aimbot_lock_strength * distance_factor;
-                            ui.text(format!("Effective Tolerance: {:.1}px", effective_tolerance));
-                        }
+                ui.separator();
+                if settings.aimbot_rcs_enabled {
+                    ui.text(format!("RCS: {:.2}, {:.2}", 
+                        settings.aimbot_rcs_x, settings.aimbot_rcs_y));
+                    
+                    if let Some((rcs_x, rcs_y)) = self.last_rcs_values {
+                        ui.text(format!("Active RCS: {:.2}, {:.2}", rcs_x, rcs_y));
+                    } else {
+                        ui.text("RCS: Inactive");
                     }
+                } else {
+                    ui.text("RCS: Disabled");
                 }
             });
+
+        // If user closed the debug window, update the setting
+        if !show_debug {
+            // We can't directly modify settings here, so we'll just note it
+            // The user will need to turn it off in the main settings
+        }
 
         Ok(())
     }
@@ -561,6 +521,4 @@ struct AimTarget {
     entity_id: u32,
     target_position: Vector3<f32>,
     screen_position: [f32; 2],
-    distance_to_crosshair: f32,
-    world_distance: f32,
 } 

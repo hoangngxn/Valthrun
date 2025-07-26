@@ -66,6 +66,7 @@ use windows::Win32::UI::Shell::IsUserAnAdmin;
 use crate::{
     enhancements::{
         sniper_crosshair::SniperCrosshair,
+        AimBot,
         AntiAimPunsh,
         BombInfoIndicator,
         PlayerESP,
@@ -116,6 +117,7 @@ impl KeyboardInput for imgui::Ui {
 pub struct UpdateContext<'a> {
     pub input: &'a dyn KeyboardInput,
     pub states: &'a StateRegistry,
+    pub settings_visible: bool,
 
     pub cs2: &'a Arc<CS2Handle>,
 }
@@ -246,6 +248,7 @@ impl Application {
 
             states: &self.app_state,
             input: ui,
+            settings_visible: self.settings_visible,
         };
 
         for enhancement in self.enhancements.iter() {
@@ -548,6 +551,7 @@ fn real_main(args: &AppArgs) -> anyhow::Result<()> {
 
         enhancements: vec![
             Rc::new(RefCell::new(AntiAimPunsh::new(cvar_sensitivity))),
+            Rc::new(RefCell::new(AimBot::new())),
             Rc::new(RefCell::new(PlayerESP::new())),
             Rc::new(RefCell::new(SpectatorsListIndicator::new())),
             Rc::new(RefCell::new(BombInfoIndicator::new())),

@@ -40,6 +40,7 @@ use overlay::UnicodeTextRenderer;
 use utils_state::StateRegistry;
 
 use super::{
+    BoneTarget,
     Color,
     EspColor,
     EspColorType,
@@ -256,6 +257,11 @@ impl SettingsUI {
                             let _enabled = ui.begin_enabled(matches!(settings.esp_mode, KeyToggleMode::Toggle | KeyToggleMode::Trigger));
                             ui.button_key_optional(obfstr!("ESP toggle/trigger"), &mut settings.esp_toogle, [150.0, 0.0]);
                         }
+                        
+                        {
+                            let _enabled = ui.begin_enabled(matches!(settings.aimbot_mode, KeyToggleMode::Toggle | KeyToggleMode::Trigger));
+                            ui.button_key_optional(obfstr!("Aimbot toggle/trigger"), &mut settings.key_aimbot, [150.0, 0.0]);
+                        }
                     }
 
                     if let Some(_tab) = ui.tab_item(obfstr!("Visuals")) {
@@ -345,6 +351,95 @@ impl SettingsUI {
                         }
 
                         ui.checkbox("Simple Recoil Helper", &mut settings.aim_assist_recoil);
+                    }
+
+                    if let Some(_) = ui.tab_item(obfstr!("Aimbot")) {
+                        ui.set_next_item_width(150.0);
+                        ui.combo_enum(obfstr!("Aimbot Mode"), &[
+                            (KeyToggleMode::Off, "Always Off"),
+                            (KeyToggleMode::Trigger, "Trigger"),
+                            (KeyToggleMode::TriggerInverted, "Trigger Inverted"),
+                            (KeyToggleMode::Toggle, "Toggle"),
+                            (KeyToggleMode::AlwaysOn, "Always On"),
+                        ], &mut settings.aimbot_mode);
+
+                        if !matches!(settings.aimbot_mode, KeyToggleMode::Off | KeyToggleMode::AlwaysOn) {
+                            ui.button_key_optional(obfstr!("Aimbot Key"), &mut settings.key_aimbot, [150.0, 0.0]);
+                        }
+
+                        if !matches!(settings.aimbot_mode, KeyToggleMode::Off) {
+                            ui.separator();
+                            
+                            ui.text(obfstr!("Target Selection"));
+                            ui.set_next_item_width(200.0);
+                            ui.combo_enum(obfstr!("Target Bone"), &[
+                                (BoneTarget::Head, "Head"),
+                                (BoneTarget::Neck, "Neck"),
+                                (BoneTarget::Chest, "Chest"),
+                                (BoneTarget::Stomach, "Stomach"),
+                                (BoneTarget::Closest, "Closest to Crosshair"),
+                            ], &mut settings.aimbot_bone_target);
+
+                            ui.separator();
+                            
+                            ui.text(obfstr!("FOV Settings"));
+                            ui.slider_config(obfstr!("FOV Radius"), 10.0, 500.0)
+                                .build(&mut settings.aimbot_fov_radius);
+                            
+                            ui.checkbox(obfstr!("Show FOV Circle"), &mut settings.aimbot_show_fov);
+                            ui.checkbox(obfstr!("Show Debug Window"), &mut settings.aimbot_show_debug);
+
+                            ui.separator();
+                            
+                            ui.text(obfstr!("Smoothness Settings"));
+                            ui.slider_config(obfstr!("Smoothness X"), 1.0, 50.0)
+                                .build(&mut settings.aimbot_smoothness_x);
+                            
+                            ui.slider_config(obfstr!("Smoothness Y"), 1.0, 50.0)
+                                .build(&mut settings.aimbot_smoothness_y);
+
+                            ui.separator();
+                            
+                            ui.text(obfstr!("Accuracy Settings"));
+                            ui.slider_config(obfstr!("Lock Strength"), 1.0, 20.0)
+                                .display_format("%.1f")
+                                .build(&mut settings.aimbot_lock_strength);
+                            
+                            if ui.is_item_hovered() {
+                                ui.tooltip_text("Lower = stricter lock (less mouse freedom)\nHigher = looser lock (more mouse freedom)");
+                            }
+                            
+                            ui.checkbox(obfstr!("Distance Scaling"), &mut settings.aimbot_distance_scaling);
+                            
+                            if ui.is_item_hovered() {
+                                ui.tooltip_text("Adjusts lock tolerance based on target distance\nFar targets = smaller tolerance (more precise)\nClose targets = larger tolerance (more freedom)");
+                            }
+                            
+                            ui.checkbox(obfstr!("Strict Boundary"), &mut settings.aimbot_strict_boundary);
+                            
+                            if ui.is_item_hovered() {
+                                ui.tooltip_text("Enforces the green tolerance circle as a hard boundary\nPrevents mouse movement outside the circle");
+                            }
+
+                            ui.separator();
+                            
+                            ui.checkbox(obfstr!("Team Check"), &mut settings.aimbot_team_check);
+                            
+                            ui.separator();
+                            
+                            if ui.button(obfstr!("Reset to Defaults")) {
+                                settings.aimbot_fov_radius = 100.0;
+                                settings.aimbot_smoothness_x = 10.0;
+                                settings.aimbot_smoothness_y = 10.0;
+                                settings.aimbot_team_check = true;
+                                settings.aimbot_show_fov = false;
+                                settings.aimbot_show_debug = false;
+                                settings.aimbot_bone_target = BoneTarget::Head;
+                                settings.aimbot_lock_strength = 5.0;
+                                settings.aimbot_distance_scaling = true;
+                                settings.aimbot_strict_boundary = true;
+                            }
+                        }
                     }
 
                     if let Some(_) = ui.tab_item("Web Radar") {

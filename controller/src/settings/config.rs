@@ -67,12 +67,24 @@ fn default_key_none() -> Option<HotKey> {
     None
 }
 
+fn default_key_aimbot() -> Option<HotKey> {
+    Some(Key::MouseX2.into())
+}
+
 fn default_esp_mode() -> KeyToggleMode {
     KeyToggleMode::AlwaysOn
 }
 
 fn default_trigger_bot_mode() -> KeyToggleMode {
     KeyToggleMode::Trigger
+}
+
+fn default_aimbot_mode() -> KeyToggleMode {
+    KeyToggleMode::Trigger
+}
+
+fn default_aimbot_bone_target() -> BoneTarget {
+    BoneTarget::Head
 }
 
 fn default_esp_configs() -> BTreeMap<String, EspConfig> {
@@ -99,6 +111,27 @@ pub enum KeyToggleMode {
     Trigger,
     TriggerInverted,
     Off,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
+pub enum BoneTarget {
+    Head,
+    Neck,
+    Chest,
+    Stomach,
+    Closest,
+}
+
+impl BoneTarget {
+    pub fn display_name(&self) -> &'static str {
+        match self {
+            BoneTarget::Head => "Head",
+            BoneTarget::Neck => "Neck", 
+            BoneTarget::Chest => "Chest",
+            BoneTarget::Stomach => "Stomach",
+            BoneTarget::Closest => "Closest to Crosshair",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
@@ -261,6 +294,42 @@ pub struct AppSettings {
 
     #[serde(default = "default_u32::<1>")]
     pub aim_assist_recoil_min_bullets: u32,
+
+    #[serde(default = "default_aimbot_mode")]
+    pub aimbot_mode: KeyToggleMode,
+
+    #[serde(default = "default_key_aimbot")]
+    pub key_aimbot: Option<HotKey>,
+
+    #[serde(default = "bool_true")]
+    pub aimbot_team_check: bool,
+
+    #[serde(default = "default_f32::<100, 1>")]
+    pub aimbot_fov_radius: f32,
+
+    #[serde(default = "default_f32::<10, 1>")]
+    pub aimbot_smoothness_x: f32,
+
+    #[serde(default = "default_f32::<10, 1>")]
+    pub aimbot_smoothness_y: f32,
+
+    #[serde(default = "bool_false")]
+    pub aimbot_show_fov: bool,
+
+    #[serde(default = "default_aimbot_bone_target")]
+    pub aimbot_bone_target: BoneTarget,
+
+    #[serde(default = "bool_false")]
+    pub aimbot_show_debug: bool,
+
+    #[serde(default = "default_f32::<5, 1>")]
+    pub aimbot_lock_strength: f32,
+
+    #[serde(default = "bool_true")]
+    pub aimbot_distance_scaling: bool,
+
+    #[serde(default = "bool_true")]
+    pub aimbot_strict_boundary: bool,
 
     #[serde(default = "bool_true")]
     pub hide_overlay_from_screen_capture: bool,

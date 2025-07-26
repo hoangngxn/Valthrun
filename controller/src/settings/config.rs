@@ -67,12 +67,44 @@ fn default_key_none() -> Option<HotKey> {
     None
 }
 
+fn default_key_aimbot() -> Option<HotKey> {
+    Some(Key::MouseX2.into())
+}
+
 fn default_esp_mode() -> KeyToggleMode {
     KeyToggleMode::AlwaysOn
 }
 
 fn default_trigger_bot_mode() -> KeyToggleMode {
     KeyToggleMode::Trigger
+}
+
+fn default_aimbot_mode() -> KeyToggleMode {
+    KeyToggleMode::Trigger
+}
+
+fn default_aimbot_bone_target() -> BoneTarget {
+    BoneTarget::Head
+}
+
+fn default_aimbot_fov_radius() -> f32 {
+    100.0
+}
+
+fn default_aimbot_smoothness_x() -> f32 {
+    10.0
+}
+
+fn default_aimbot_smoothness_y() -> f32 {
+    10.0
+}
+
+fn default_aimbot_rcs_x() -> f32 {
+    1.0
+}
+
+fn default_aimbot_rcs_y() -> f32 {
+    1.0
 }
 
 fn default_esp_configs() -> BTreeMap<String, EspConfig> {
@@ -99,6 +131,27 @@ pub enum KeyToggleMode {
     Trigger,
     TriggerInverted,
     Off,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
+pub enum BoneTarget {
+    Head,
+    Neck,
+    Chest,
+    Stomach,
+    Closest,
+}
+
+impl BoneTarget {
+    pub fn display_name(&self) -> &'static str {
+        match self {
+            BoneTarget::Head => "Head",
+            BoneTarget::Neck => "Neck", 
+            BoneTarget::Chest => "Chest",
+            BoneTarget::Stomach => "Stomach",
+            BoneTarget::Closest => "Closest to Crosshair",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
@@ -261,6 +314,50 @@ pub struct AppSettings {
 
     #[serde(default = "default_u32::<1>")]
     pub aim_assist_recoil_min_bullets: u32,
+
+    #[serde(default = "default_aimbot_mode")]
+    pub aimbot_mode: KeyToggleMode,
+
+    #[serde(default = "default_key_aimbot")]
+    pub key_aimbot: Option<HotKey>,
+
+    /// FOV radius for aimbot target detection (in pixels)
+    #[serde(default = "default_aimbot_fov_radius")]
+    pub aimbot_fov_radius: f32,
+
+    /// Aimbot smoothness horizontal axis
+    #[serde(default = "default_aimbot_smoothness_x")]
+    pub aimbot_smoothness_x: f32,
+
+    /// Aimbot smoothness vertical axis  
+    #[serde(default = "default_aimbot_smoothness_y")]
+    pub aimbot_smoothness_y: f32,
+
+    /// Show FOV circle
+    #[serde(default)]
+    pub aimbot_show_fov: bool,
+
+    #[serde(default = "default_aimbot_bone_target")]
+    pub aimbot_bone_target: BoneTarget,
+
+    /// Show debug window
+    #[serde(default)]
+    pub aimbot_show_debug: bool,
+
+    /// Enable RCS (Recoil Control System) for aimbot
+    #[serde(default)]
+    pub aimbot_rcs_enabled: bool,
+
+    /// RCS horizontal compensation strength (0.0 to 2.0)
+    #[serde(default = "default_aimbot_rcs_x")]
+    pub aimbot_rcs_x: f32,
+
+    /// RCS vertical compensation strength (0.0 to 2.0)  
+    #[serde(default = "default_aimbot_rcs_y")]
+    pub aimbot_rcs_y: f32,
+
+    #[serde(default = "bool_true")]
+    pub aimbot_team_check: bool,
 
     #[serde(default = "bool_true")]
     pub hide_overlay_from_screen_capture: bool,

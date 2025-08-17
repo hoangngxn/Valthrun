@@ -251,7 +251,7 @@ impl SettingsUI {
                     }
 
                     if let Some(_) = ui.tab_item("Hotkeys") {
-                        ui.button_key(obfstr!("Toggle Settings"), &mut settings.key_settings, [150.0, 0.0]);
+                        ui.button_key_ignore_mouse_left(obfstr!("Toggle Settings"), &mut settings.key_settings, [150.0, 0.0]);
 
                         {
                             let _enabled = ui.begin_enabled(matches!(settings.esp_mode, KeyToggleMode::Toggle | KeyToggleMode::Trigger));

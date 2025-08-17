@@ -128,12 +128,19 @@ impl ImguiUiEx for imgui::Ui {
 pub trait ImGuiKey {
     fn button_key(&self, label: &str, key: &mut HotKey, size: [f32; 2]) -> bool;
     fn button_key_optional(&self, label: &str, key: &mut Option<HotKey>, size: [f32; 2]) -> bool;
+    fn button_key_ignore_mouse_left(&self, label: &str, key: &mut HotKey, size: [f32; 2]) -> bool;
+    fn button_key_optional_ignore_mouse_left(
+        &self,
+        label: &str,
+        key: &mut Option<HotKey>,
+        size: [f32; 2],
+    ) -> bool;
 }
 
 impl ImGuiKey for imgui::Ui {
     fn button_key(&self, label: &str, key: &mut HotKey, size: [f32; 2]) -> bool {
         let mut key_opt = Some(key.clone());
-        if hotkey::render_button_key(self, label, &mut key_opt, size, false) {
+        if hotkey::render_button_key(self, label, &mut key_opt, size, false, false) {
             *key = key_opt.unwrap();
             true
         } else {
@@ -142,7 +149,26 @@ impl ImGuiKey for imgui::Ui {
     }
 
     fn button_key_optional(&self, label: &str, key: &mut Option<HotKey>, size: [f32; 2]) -> bool {
-        hotkey::render_button_key(self, label, key, size, true)
+        hotkey::render_button_key(self, label, key, size, true, false)
+    }
+
+    fn button_key_ignore_mouse_left(&self, label: &str, key: &mut HotKey, size: [f32; 2]) -> bool {
+        let mut key_opt = Some(key.clone());
+        if hotkey::render_button_key(self, label, &mut key_opt, size, false, true) {
+            *key = key_opt.unwrap();
+            true
+        } else {
+            false
+        }
+    }
+
+    fn button_key_optional_ignore_mouse_left(
+        &self,
+        label: &str,
+        key: &mut Option<HotKey>,
+        size: [f32; 2],
+    ) -> bool {
+        hotkey::render_button_key(self, label, key, size, true, true)
     }
 }
 
@@ -191,6 +217,7 @@ mod hotkey {
         key: &mut Option<HotKey>,
         size: [f32; 2],
         optional: bool,
+        ignore_mouse_left: bool,
     ) -> bool {
         let _container = ui.push_id(label);
 
@@ -239,6 +266,9 @@ mod hotkey {
                     ui.close_current_popup();
                 } else {
                     for key_variant in Key::VARIANTS {
+                        if ignore_mouse_left && matches!(key_variant, Key::MouseLeft) {
+                            continue;
+                        }
                         if ui.is_key_pressed(key_variant) {
                             *key = Some(HotKey(key_variant));
                             updated = true;

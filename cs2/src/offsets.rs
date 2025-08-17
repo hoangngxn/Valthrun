@@ -114,7 +114,7 @@ impl CS2Offset {
                 Module::Tier0,
                 Signature::relative_address(
                     obfstr!("CCVars"),
-                    obfstr!("4C 8D 2D ? ? ? ? 0F 28 45"),
+                    obfstr!("4C 8D 35 ? ? ? ? 0F 28 45"),
                     0x03,
                     0x07,
                 ),

@@ -45,12 +45,9 @@ pub struct CCVarEntry {
 
 #[raw_struct(size = 0x10)]
 pub struct CCVar {
-    #[field(offset = 0x48)]
+    #[field(offset = 0x50)]
     pub entries: Ptr64<dyn Array<dyn CCVarEntry>>,
 
-    #[field(offset = 0x52)]
-    pub entries_capacity: u64,
-
-    #[field(offset = 0x56)]
+    #[field(offset = 0x5E)]
     pub entries_count: u16,
 }

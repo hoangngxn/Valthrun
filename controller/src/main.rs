@@ -8,6 +8,7 @@ use std::{
     fmt::Debug,
     path::PathBuf,
     rc::Rc,
+    str::FromStr,
     sync::{
         atomic::{
             AtomicBool,
@@ -24,6 +25,10 @@ use std::{
 use anyhow::Context;
 use clap::Parser;
 use cs2::{
+    schema_runtime::{
+        self,
+        SetupOptions,
+    },
     CS2Handle,
     ConVars,
     InterfaceError,
@@ -40,6 +45,7 @@ use imgui::{
     FontConfig,
     FontId,
     FontSource,
+    Key,
     Ui,
 };
 use obfstr::obfstr;
@@ -69,11 +75,15 @@ use crate::{
         AimBot,
         AntiAimPunsh,
         BombInfoIndicator,
+        BombLabelIndicator,
         PlayerESP,
         SpectatorsListIndicator,
         TriggerBot,
     },
-    settings::save_app_settings,
+    settings::{
+        save_app_settings,
+        HotKey,
+    },
     utils::TextWithShadowUi,
     winver::version_info,
 };
@@ -153,6 +163,8 @@ pub struct Application {
     pub last_total_read_calls: usize,
 
     pub settings_visible: bool,
+    pub settings_key_warning_visible: RefCell<bool>,
+
     pub settings_dirty: bool,
     pub settings_ui: RefCell<SettingsUI>,
     pub settings_screen_capture_changed: AtomicBool,
@@ -225,7 +237,7 @@ impl Application {
         }
 
         if ui.is_key_pressed_no_repeat(self.settings().key_settings.0) {
-            log::debug!("Toogle settings");
+            log::debug!("Toggle settings");
             self.settings_visible = !self.settings_visible;
             self.cs2.add_metrics_record(
                 "settings-toggled",
@@ -236,6 +248,12 @@ impl Application {
                 /* overlay has just been closed */
                 self.settings_dirty = true;
             }
+        } else if !self.settings().key_settings_ignore_insert_warning
+            && self.settings().key_settings.0 != Key::Insert
+            && ui.is_key_pressed_no_repeat(Key::Insert)
+        {
+            log::trace!("Showing insert key warning");
+            *self.settings_key_warning_visible.borrow_mut() = true;
         }
 
         self.app_state.invalidate_states();
@@ -286,6 +304,53 @@ impl Application {
             let mut settings_ui = self.settings_ui.borrow_mut();
             settings_ui.render(self, ui, unicode_text)
         }
+
+        {
+            let mut warning_visible = self.settings_key_warning_visible.borrow_mut();
+            self.render_settings_key_warning(ui, &mut *warning_visible);
+        }
+    }
+
+    fn render_settings_key_warning(&self, ui: &imgui::Ui, popup_visible: &mut bool) {
+        if !*popup_visible {
+            /* do not render window */
+            return;
+        }
+
+        let mut settings = self.settings_mut();
+        ui.window("##warning_insert_key")
+            .movable(false)
+            .collapsible(false)
+            .always_auto_resize(true)
+            .position(
+                [ui.io().display_size[0] * 0.5, ui.io().display_size[1] * 0.5],
+                Condition::Always,
+            )
+            .position_pivot([0.5, 0.5])
+            .build(|| {
+                ui.text("We detected you pressed the \"INSERT\" key.");
+                ui.text("If you meant to open the Valthrun Overlay please use the \"PAUSE\" key.");
+                ui.dummy([0.0, 2.5]);
+                ui.separator();
+                ui.dummy([0.0, 2.5]);
+
+                ui.set_next_item_width(ui.content_region_avail()[0]);
+                ui.checkbox(
+                    "Do not show this warning again",
+                    &mut settings.key_settings_ignore_insert_warning,
+                );
+
+                ui.dummy([0.0, 2.5]);
+                if ui.button("Bind to INSERT") {
+                    settings.key_settings = HotKey(Key::Insert);
+                    *popup_visible = false;
+                }
+
+                ui.same_line_with_pos(ui.content_region_avail()[0] - 100.0);
+                if ui.button_with_size("Close", [100.0, 0.0]) {
+                    *popup_visible = false;
+                }
+            });
     }
 
     fn render_overlay(&self, ui: &imgui::Ui, unicode_text: &UnicodeTextRenderer) {
@@ -458,28 +523,13 @@ fn real_main(args: &AppArgs) -> anyhow::Result<()> {
         );
     }
 
-    {
-        if let Some(file) = &args.schema_file {
-            log::info!(
-                "{} {}",
-                obfstr!("Loading CS2 schema (offsets) from file"),
-                file.display()
-            );
-
-            cs2_schema_provider_impl::setup_schema_from_file(&mut app_state, file)
-                .context("file schema setup")?;
-        } else {
-            log::info!(
-                "{}",
-                obfstr!("Loading CS2 schema (offsets) from CS2 schema system")
-            );
-            cs2_schema_provider_impl::setup_provider(Box::new(
-                cs2_schema_provider_impl::RuntimeSchemaProvider::new(&app_state)
-                    .context("load runtime schema")?,
-            ));
-        }
-        log::info!("CS2 schema (offsets) loaded.");
-    }
+    schema_runtime::setup(
+        &app_state,
+        &SetupOptions {
+            file: args.schema_file.clone(),
+            fscache: Some(PathBuf::from_str("cached_schema")?),
+        },
+    )?;
 
     let cvars = ConVars::new(&app_state).context("cvars")?;
     let cvar_sensitivity = cvars
@@ -555,6 +605,7 @@ fn real_main(args: &AppArgs) -> anyhow::Result<()> {
             Rc::new(RefCell::new(PlayerESP::new())),
             Rc::new(RefCell::new(SpectatorsListIndicator::new())),
             Rc::new(RefCell::new(BombInfoIndicator::new())),
+            Rc::new(RefCell::new(BombLabelIndicator::new())),
             Rc::new(RefCell::new(TriggerBot::new())),
             Rc::new(RefCell::new(GrenadeHelper::new())),
             Rc::new(RefCell::new(SniperCrosshair::new())),
@@ -564,6 +615,8 @@ fn real_main(args: &AppArgs) -> anyhow::Result<()> {
         frame_read_calls: 0,
 
         settings_visible: false,
+        settings_key_warning_visible: RefCell::new(false),
+
         settings_dirty: false,
         settings_ui: RefCell::new(SettingsUI::new()),
         /* set the screen capture visibility at the beginning of the first update */

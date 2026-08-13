@@ -221,4 +221,77 @@ impl ViewController {
             }
         }
     }
+
+    /// Calculate offscreen indicator position and rotation for a world position
+    /// Displays arrows in a circular pattern around the center of the screen
+    /// Returns (screen_position, rotation_angle_radians) if the target is offscreen
+    pub fn calculate_offscreen_indicator(
+        &self,
+        world_pos: &nalgebra::Vector3<f32>,
+        radius_from_center: f32,
+    ) -> Option<(mint::Vector2<f32>, f32)> {
+        let screen_center_x = self.screen_bounds.x / 2.0;
+        let screen_center_y = self.screen_bounds.y / 2.0;
+
+        // Try to project to screen - if it succeeds and is within bounds, don't show indicator
+        if let Some(_) = self.world_to_screen(world_pos, false) {
+            return None;
+        }
+
+        let camera_pos = match self.get_camera_world_position() {
+            Some(pos) => pos,
+            None => {
+                return None;
+            }
+        };
+
+        // Calculate direction vector from camera to target in world space
+        let to_target = world_pos - camera_pos;
+
+        // Calculate distance to ensure we're not too close
+        let distance = to_target.norm();
+        if distance < 1.0 {
+            return None;
+        }
+
+        // Extract camera view vectors from view matrix
+        let forward_x = -self.view_matrix.m13;
+        let forward_y = -self.view_matrix.m23;
+        let forward_z = -self.view_matrix.m33;
+
+        let right_x = self.view_matrix.m11;
+        let right_y = self.view_matrix.m21;
+        let right_z = self.view_matrix.m31;
+
+        // Project target direction onto camera's forward and right vectors
+        let forward_dot =
+            to_target.x * forward_x + to_target.y * forward_y + to_target.z * forward_z;
+        let right_dot = to_target.x * right_x + to_target.y * right_y + to_target.z * right_z;
+
+        // Calculate angle in screen space
+        // right_dot positive = right side, negative = left side
+        // forward_dot positive = in front, negative = behind
+        let angle = (-right_dot).atan2(forward_dot);
+
+        // Calculate position on circle
+        // Position is at fixed radius from center, in the direction of the target
+        let indicator_x = screen_center_x - radius_from_center * angle.sin();
+        let indicator_y = screen_center_y + radius_from_center * angle.cos();
+
+        // Verify final values are valid
+        if !indicator_x.is_finite() || !indicator_y.is_finite() {
+            return None;
+        }
+
+        // Rotate arrow angle by 90 degrees because we want it to point towards the target
+        let arrow_angle = angle + std::f32::consts::PI / 2.0;
+
+        Some((
+            mint::Vector2 {
+                x: indicator_x,
+                y: indicator_y,
+            },
+            arrow_angle,
+        ))
+    }
 }

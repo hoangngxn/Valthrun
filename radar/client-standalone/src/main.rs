@@ -1,17 +1,21 @@
 use std::{
     path::PathBuf,
+    str::FromStr,
     time::Duration,
 };
 
 use anyhow::Context;
 use clap::Parser;
 use cs2::{
+    schema_runtime::{
+        self,
+        SetupOptions,
+    },
     CS2Handle,
     InterfaceError,
     StateCS2Handle,
     StateCS2Memory,
 };
-use obfstr::obfstr;
 use radar_client::{
     CS2RadarGenerator,
     DummyRadarGenerator,
@@ -39,7 +43,7 @@ struct Args {
     schema_file: Option<PathBuf>,
 
     /// Use a dummy generator instead of generating the radar data from CS2.
-    /// This is usefull when testing the radar client without CS2.
+    /// This is useful when testing the radar client without CS2.
     #[arg(long, hide = true)]
     dummy_generator: bool,
 }
@@ -87,35 +91,47 @@ async fn real_main(args: &Args) -> anyhow::Result<()> {
                 return Err(err);
             }
         };
-        let mut states = StateRegistry::new(1024 * 8);
+        let states = StateRegistry::new(1024 * 8);
         states.set(StateCS2Memory::new(cs2.create_memory_view()), ())?;
         states.set(StateCS2Handle::new(cs2), ())?;
 
-        if let Some(file) = &args.schema_file {
-            log::info!(
-                "{} {}",
-                obfstr!("Loading CS2 schema (offsets) from file"),
-                file.display()
-            );
-
-            cs2_schema_provider_impl::setup_schema_from_file(&mut states, file)
-                .context("file schema setup")?;
-        } else {
-            log::info!(
-                "{}",
-                obfstr!("Loading CS2 schema (offsets) from CS2 schema system")
-            );
-            cs2_schema_provider_impl::setup_provider(Box::new(
-                cs2_schema_provider_impl::RuntimeSchemaProvider::new(&states)
-                    .context("load runtime schema")?,
-            ));
-        }
-        log::info!("CS2 schema (offsets) loaded.");
+        schema_runtime::setup(
+            &states,
+            &SetupOptions {
+                file: args.schema_file.clone(),
+                fscache: Some(PathBuf::from_str("schema_cache").unwrap()),
+            },
+        )?;
 
         Box::new(CS2RadarGenerator::new(states)?)
     };
 
     self::radar_publish_loop(radar_generator, &url).await
+}
+
+async fn reconnect_radar(
+    url: &Url,
+    session_auth_token: Option<String>,
+) -> anyhow::Result<WebRadarPublisher> {
+    let mut reconnect_index = 0;
+    loop {
+        log::info!("Reconnecting...");
+        match WebRadarPublisher::connect(&url, session_auth_token.clone()).await {
+            Ok(publisher) => return Ok(publisher),
+            Err(error) => {
+                log::error!("Reconnect failed: {:#}", error);
+                if reconnect_index >= RECONNECT_INTERVAL.len() {
+                    anyhow::bail!("reconnect failed");
+                }
+
+                let timeout = RECONNECT_INTERVAL[reconnect_index];
+                reconnect_index += 1;
+
+                log::error!("Try again in {:#?}", timeout);
+                tokio::time::sleep(timeout).await;
+            }
+        }
+    }
 }
 
 async fn radar_publish_loop(
@@ -149,6 +165,8 @@ async fn radar_publish_loop(
             },
             _ = signal::ctrl_c() => {
                 log::info!("Stopping radar...");
+                radar_client.close_connection().await;
+                log::info!("Radar stopped successfully.");
                 break;
             }
         }
@@ -157,25 +175,13 @@ async fn radar_publish_loop(
         let session_auth_token = radar_client.session_auth_token.clone();
 
         /* ensure to close the connection in order to reconnect */
-        drop(radar_client);
+        radar_client.close_connection().await;
 
-        let mut reconnect_index = 0;
-        radar_client = loop {
-            log::info!("Reconnecting...");
-            match WebRadarPublisher::connect(&url, Some(session_auth_token.clone())).await {
-                Ok(publisher) => break publisher,
-                Err(error) => {
-                    log::error!("Reconnect failed: {:#}", error);
-                    if reconnect_index >= RECONNECT_INTERVAL.len() {
-                        anyhow::bail!("reconnect failed");
-                    }
-
-                    let timeout = RECONNECT_INTERVAL[reconnect_index];
-                    reconnect_index += 1;
-
-                    log::error!("Try again in {:#?}", timeout);
-                    tokio::time::sleep(timeout).await;
-                }
+        radar_client = tokio::select! {
+            client = self::reconnect_radar(&url, Some(session_auth_token.clone())) => client?,
+             _ = signal::ctrl_c() => {
+                log::info!("Aborting reconnect...");
+                break;
             }
         };
         radar_client.set_generator(radar_generator);
@@ -185,6 +191,5 @@ async fn radar_publish_loop(
         );
     }
 
-    radar_client.close_connection().await;
     Ok(())
 }

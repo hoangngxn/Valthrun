@@ -83,6 +83,10 @@ export class EventEmitter<Events> implements IEventEmitter<Events> {
         });
     }
 
+    public setMaxListeners(count: number) {
+        this.emitter.setMaxListeners(count);
+    }
+
     private createListener(event: string, listener: Function): EventListener {
         const emitter = this;
         const eventListener = function () {

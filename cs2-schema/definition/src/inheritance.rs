@@ -24,11 +24,11 @@ impl ClassReference {
     }
 }
 
-pub struct InheritageMap {
+pub struct InheritanceMap {
     mapping: BTreeMap<ClassReference, ClassReference>,
 }
 
-impl InheritageMap {
+impl InheritanceMap {
     pub fn build(src: &[SchemaScope]) -> Self {
         let mut mapping = BTreeMap::default();
 

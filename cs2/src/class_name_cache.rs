@@ -76,13 +76,11 @@ impl ClassNameCache {
 
         let memory = cs2.create_memory_view();
 
-        let class_name = PtrCStr::read_object(
-            &*memory,
-            u64::read_object(&*memory, address + 0x30).map_err(|e| anyhow!(e))? + 0x08,
-        )
-        .map_err(|e| anyhow!(e))?
-        .read_string(&*memory)?
-        .context("failed to read class name")?;
+        let class_binding = u64::read_object(&*memory, address + 0x08).map_err(|e| anyhow!(e))?;
+        let class_name = PtrCStr::read_object(&*memory, class_binding + 0x08)
+            .map_err(|e| anyhow!(e))?
+            .read_string(&*memory)?
+            .context("failed to read class name")?;
 
         self.lookup.insert(address, class_name.clone());
         self.reverse_lookup.insert(class_name, address);

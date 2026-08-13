@@ -92382,7 +92382,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ThreeState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TRS_FALSE",
               "value": 0
@@ -92401,7 +92401,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "fieldtype_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "FIELD_VOID",
               "value": 0
@@ -92736,7 +92736,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FuseVariableAccess_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "WRITABLE",
               "value": 0
@@ -92751,7 +92751,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FuseVariableType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "INVALID",
               "value": 0
@@ -92794,7 +92794,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderSlotType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "RENDER_SLOT_INVALID",
               "value": 18446744073709551615
@@ -92813,7 +92813,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderBufferFlags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "RENDER_BUFFER_USAGE_VERTEX_BUFFER",
               "value": 1
@@ -92868,7 +92868,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderPrimitiveType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "RENDER_PRIM_POINTS",
               "value": 0
@@ -92931,7 +92931,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "InputLayoutVariation_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "INPUT_LAYOUT_VARIATION_DEFAULT",
               "value": 0
@@ -92954,7 +92954,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderMultisampleType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "RENDER_MULTISAMPLE_INVALID",
               "value": 18446744073709551615
@@ -92993,7 +92993,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SpawnDebugOverrideState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SPAWN_DEBUG_OVERRIDE_NONE",
               "value": 0
@@ -93012,7 +93012,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SpawnDebugRestrictionOverrideState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SPAWN_DEBUG_RESTRICT_NONE",
               "value": 0
@@ -93039,7 +93039,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntityDormancyType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ENTITY_NOT_DORMANT",
               "value": 0
@@ -93058,7 +93058,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntityIOTargetType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ENTITY_IO_TARGET_INVALID",
               "value": 18446744073709551615
@@ -93081,7 +93081,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "HorizJustification_e",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "HORIZ_JUSTIFICATION_LEFT",
               "value": 0
@@ -93104,7 +93104,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VertJustification_e",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "VERT_JUSTIFICATION_TOP",
               "value": 0
@@ -93127,7 +93127,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "LayoutPositionType_e",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LAYOUTPOSITIONTYPE_VIEWPORT_RELATIVE",
               "value": 0
@@ -93146,7 +93146,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BloomBlendMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BLOOM_BLEND_ADD",
               "value": 0
@@ -93165,7 +93165,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ViewFadeMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "VIEW_FADE_CONSTANT_COLOR",
               "value": 0
@@ -93184,7 +93184,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "OutOfPVSUpdates_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "OOPVSUpdates_OptOut",
               "value": 0
@@ -93207,7 +93207,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimValueSource",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MoveHeading",
               "value": 0
@@ -93362,7 +93362,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MoodType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eMoodType_Head",
               "value": 0
@@ -93377,7 +93377,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimationProcessingType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ANIMATION_PROCESSING_SERVER_SIMULATION",
               "value": 0
@@ -93408,7 +93408,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimationSnapshotType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ANIMATION_SNAPSHOT_SERVER_SIMULATION",
               "value": 0
@@ -93443,7 +93443,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SeqCmd_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SeqCmd_Nop",
               "value": 0
@@ -93518,7 +93518,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SeqPoseSetting_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SEQ_POSE_SETTING_CONSTANT",
               "value": 0
@@ -93541,7 +93541,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleAttachment_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PATTACH_INVALID",
               "value": 18446744073709551615
@@ -93620,7 +93620,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BoneTransformSpace_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BoneTransformSpace_Invalid",
               "value": 18446744073709551615
@@ -93643,7 +93643,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EPulseGraphExecutionHistoryFlag",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "NO_FLAGS",
               "value": 0
@@ -93674,7 +93674,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseInstructionCode_t",
           "enum_size": 2,
-          "memebers": [
+          "members": [
             {
               "name": "INVALID",
               "value": 0
@@ -94121,7 +94121,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseCursorExecResult_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Succeeded",
               "value": 0
@@ -94144,7 +94144,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseValueType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PVAL_VOID",
               "value": 18446744073709551615
@@ -94279,7 +94279,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseDomainValueType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "INVALID",
               "value": 18446744073709551615
@@ -94302,7 +94302,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseVariableKeysSource_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PRIVATE",
               "value": 0
@@ -94333,7 +94333,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFloatType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_TYPE_INVALID",
               "value": 18446744073709551615
@@ -94452,7 +94452,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFloatBiasType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_BIAS_TYPE_INVALID",
               "value": 18446744073709551615
@@ -94479,7 +94479,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PFNoiseType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_NOISE_TYPE_PERLIN",
               "value": 0
@@ -94502,7 +94502,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PFNoiseModifier_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_NOISE_MODIFIER_NONE",
               "value": 0
@@ -94525,7 +94525,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PFNoiseTurbulence_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_NOISE_TURB_NONE",
               "value": 0
@@ -94556,7 +94556,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFloatRandomMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_RANDOM_MODE_INVALID",
               "value": 18446744073709551615
@@ -94579,7 +94579,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFloatInputMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_INPUT_MODE_INVALID",
               "value": 18446744073709551615
@@ -94602,7 +94602,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFloatMapType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_MAP_TYPE_INVALID",
               "value": 18446744073709551615
@@ -94645,7 +94645,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFloatRoundType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PF_ROUND_TYPE_INVALID",
               "value": 18446744073709551615
@@ -94672,7 +94672,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleTransformType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PT_TYPE_INVALID",
               "value": 0
@@ -94699,7 +94699,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleModelType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PM_TYPE_INVALID",
               "value": 0
@@ -94726,7 +94726,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleVecType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PVEC_TYPE_INVALID",
               "value": 18446744073709551615
@@ -94813,7 +94813,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VPhysXBodyPart_t::VPhysXFlagEnum_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FLAG_STATIC",
               "value": 1
@@ -94844,7 +94844,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VPhysXConstraintParams_t::EnumFlags0_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FLAG0_SHIFT_INTERPENETRATE",
               "value": 0
@@ -94867,7 +94867,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VPhysXJoint_t::Flags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "JOINT_FLAGS_NONE",
               "value": 0
@@ -94886,7 +94886,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VPhysXAggregateData_t::VPhysXFlagEnum_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FLAG_IS_POLYSOUP_GEOMETRY",
               "value": 1
@@ -94905,7 +94905,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MeshDrawPrimitiveFlags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MESH_DRAW_FLAGS_NONE",
               "value": 0
@@ -94944,7 +94944,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ModelSkeletonData_t::BoneFlags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FLAG_NO_BONE_FLAGS",
               "value": 0
@@ -95039,7 +95039,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PermModelInfo_t::FlagEnum",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FLAG_TRANSLUCENT",
               "value": 1
@@ -95106,7 +95106,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ModelBoneFlexComponent_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MODEL_BONE_FLEX_INVALID",
               "value": 18446744073709551615
@@ -95129,7 +95129,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderMeshSlotType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "RENDERMESH_SLOT_INVALID",
               "value": 18446744073709551615
@@ -95148,7 +95148,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ScriptedMoveTo_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eWait",
               "value": 0
@@ -95179,7 +95179,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ScriptedHeldWeaponBehavior_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 18446744073709551615
@@ -95202,7 +95202,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ModelConfigAttachmentType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MODEL_CONFIG_ATTACHMENT_INVALID",
               "value": 18446744073709551615
@@ -95229,7 +95229,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FlexOpCode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FLEX_OP_CONST",
               "value": 1
@@ -95340,7 +95340,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MorphFlexControllerRemapType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MORPH_FLEXCONTROLLER_REMAP_PASSTHRU",
               "value": 0
@@ -95363,7 +95363,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MorphBundleType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MORPH_BUNDLE_TYPE_NONE",
               "value": 0
@@ -95386,7 +95386,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SharedMovementGait_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 18446744073709551615
@@ -95417,7 +95417,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NPCPhysicsHullType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 0
@@ -95444,7 +95444,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmRootMotionBlendMode_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Blend",
               "value": 0
@@ -95467,7 +95467,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmEventRelevance_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ClientOnly",
               "value": 0
@@ -95486,7 +95486,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmEasingFunction_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Linear",
               "value": 0
@@ -95529,7 +95529,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmEasingOperation_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Linear",
               "value": 0
@@ -95628,7 +95628,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmRootMotionData::SamplingMode_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Delta",
               "value": 0
@@ -95643,7 +95643,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmFollowBoneMode_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "RotationAndTranslation",
               "value": 0
@@ -95662,7 +95662,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmFootPhase_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "LeftFootDown",
               "value": 0
@@ -95685,7 +95685,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmFootPhaseCondition_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "LeftFootDown",
               "value": 0
@@ -95716,7 +95716,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmFrameSnapEventMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Floor",
               "value": 0
@@ -95731,7 +95731,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmParticleEvent::Type_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Create",
               "value": 0
@@ -95750,7 +95750,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmSoundEvent::Type_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Play",
               "value": 0
@@ -95765,7 +95765,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmSoundEvent::Position_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -95792,7 +95792,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmTransitionRule_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "AllowTransition",
               "value": 0
@@ -95811,7 +95811,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmTransitionRuleCondition_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "AnyAllowed",
               "value": 0
@@ -95834,7 +95834,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmTargetWarpRule_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "WarpXY",
               "value": 0
@@ -95857,7 +95857,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmTargetWarpAlgorithm_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Lerp",
               "value": 0
@@ -95880,7 +95880,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmCachedValueMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "OnEntry",
               "value": 0
@@ -95895,7 +95895,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmEventConditionRules_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "LimitSearchToSourceState",
               "value": 0
@@ -95938,7 +95938,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmSyncEventIndexConditionNode::TriggerMode_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "ExactlyAtEventIndex",
               "value": 0
@@ -95953,7 +95953,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmFloatMathNode::Operator_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Add",
               "value": 0
@@ -95980,7 +95980,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmFloatComparisonNode::Comparison_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "GreaterThanEqual",
               "value": 0
@@ -96007,7 +96007,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmFloatAngleMathNode::Operation_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "ClampTo180",
               "value": 0
@@ -96030,7 +96030,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmIDComparisonNode::Comparison_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Matches",
               "value": 0
@@ -96045,7 +96045,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmPoseBlendMode_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Overlay",
               "value": 0
@@ -96064,7 +96064,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmRootMotionOverrideNode::OverrideFlags_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "AllowMoveX",
               "value": 0
@@ -96091,7 +96091,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmStateNode::TimedEvent_t::Comparison_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "LessThanEqual",
               "value": 0
@@ -96106,7 +96106,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmTimeConditionNode::ComparisonType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "PercentageThroughState",
               "value": 0
@@ -96125,7 +96125,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmTimeConditionNode::Operator_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "LessThan",
               "value": 0
@@ -96148,7 +96148,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmTargetInfoNode::Info_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "AngleHorizontal",
               "value": 0
@@ -96187,7 +96187,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmTransitionNode::TransitionOptions_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -96226,7 +96226,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CNmVectorInfoNode::Info_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "X",
               "value": 0
@@ -96257,7 +96257,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmGraphEventTypeCondition_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Entry",
               "value": 0
@@ -96288,7 +96288,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmGraphValueType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Unknown",
               "value": 0
@@ -96331,7 +96331,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NmIKBlendMode_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Effector",
               "value": 0
@@ -96346,7 +96346,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IKChannelMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TwoBone",
               "value": 0
@@ -96369,7 +96369,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EDemoBoneSelectionMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CaptureAllBones",
               "value": 0
@@ -96384,7 +96384,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimVectorSource",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MoveDirection",
               "value": 0
@@ -96447,7 +96447,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DampingSpeedFunction",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "NoDamping",
               "value": 0
@@ -96470,7 +96470,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimNodeNetworkMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ServerAuthoritative",
               "value": 0
@@ -96485,7 +96485,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "StateActionBehavior",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "STATETAGBEHAVIOR_ACTIVE_WHILE_CURRENT",
               "value": 0
@@ -96512,7 +96512,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "LinearRootMotionBlendMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LERP",
               "value": 0
@@ -96531,7 +96531,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimParamNetworkSetting",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Auto",
               "value": 0
@@ -96550,7 +96550,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FootstepLandedFootSoundType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FOOTSOUND_Left",
               "value": 0
@@ -96569,7 +96569,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimParamButton_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ANIMPARAM_BUTTON_NONE",
               "value": 0
@@ -96628,7 +96628,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimParamType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "ANIMPARAM_UNKNOWN",
               "value": 0
@@ -96671,7 +96671,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RagdollPoseControl",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Absolute",
               "value": 0
@@ -96682,7 +96682,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FieldNetworkOption",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Auto",
               "value": 0
@@ -96701,7 +96701,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FootFallTagFoot_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FOOT1",
               "value": 0
@@ -96740,7 +96740,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MatterialAttributeTagType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MATERIAL_ATTRIBUTE_TAG_VALUE",
               "value": 0
@@ -96755,7 +96755,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VelocityMetricMode",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "DirectionOnly",
               "value": 0
@@ -96774,7 +96774,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AimMatrixBlendMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "AimMatrixBlendMode_None",
               "value": 0
@@ -96797,7 +96797,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BoneMaskBlendSpace",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BlendSpace_Parent",
               "value": 0
@@ -96820,7 +96820,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "JiggleBoneSimSpace",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SimSpace_Local",
               "value": 0
@@ -96839,7 +96839,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SolveIKChainAnimNodeDebugSetting",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SOLVEIKCHAINANIMNODEDEBUGSETTING_None",
               "value": 0
@@ -96874,7 +96874,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimScriptType",
           "enum_size": 2,
-          "memebers": [
+          "members": [
             {
               "name": "ANIMSCRIPT_TYPE_INVALID",
               "value": 18446744073709551615
@@ -96893,7 +96893,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BinaryNodeTiming",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "UseChild1",
               "value": 0
@@ -96912,7 +96912,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BinaryNodeChildOption",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Child1",
               "value": 0
@@ -96927,7 +96927,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BlendKeyType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BlendKey_UserValue",
               "value": 0
@@ -96950,7 +96950,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Blend2DMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Blend2DMode_General",
               "value": 0
@@ -96965,7 +96965,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ChoiceMethod",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WeightedRandom",
               "value": 0
@@ -96988,7 +96988,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ChoiceChangeMethod",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "OnReset",
               "value": 0
@@ -97007,7 +97007,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ChoiceBlendMethod",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SingleBlendTime",
               "value": 0
@@ -97022,7 +97022,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FootLockSubVisualization",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FOOTLOCKSUBVISUALIZATION_ReachabilityAnalysis",
               "value": 0
@@ -97037,7 +97037,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FootPinningTimingSource",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FootMotion",
               "value": 0
@@ -97056,7 +97056,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "StepPhase",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "StepPhase_OnGround",
               "value": 0
@@ -97071,7 +97071,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "JumpCorrectionMethod",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ScaleMotion",
               "value": 0
@@ -97086,7 +97086,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "OrientationWarpTargetOffsetMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eLiteralValue",
               "value": 0
@@ -97109,7 +97109,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "OrientationWarpRootMotionSource_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eAnimationOrProcedural",
               "value": 0
@@ -97128,7 +97128,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "OrientationWarpMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 0
@@ -97147,7 +97147,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SelectorTagBehavior_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SelectorTagBehavior_OnWhileCurrent",
               "value": 0
@@ -97166,7 +97166,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "StanceOverrideMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Sequence",
               "value": 0
@@ -97181,7 +97181,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ResetCycleOption",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Beginning",
               "value": 0
@@ -97208,7 +97208,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TargetSelectorAngleMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eFacingHeading",
               "value": 0
@@ -97223,7 +97223,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TargetWarpAngleMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eFacingHeading",
               "value": 0
@@ -97238,7 +97238,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TargetWarpCorrectionMethod",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ScaleMotion",
               "value": 0
@@ -97253,7 +97253,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TargetWarpTimingMethod",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ReachDestinationOnRootMotionEnd",
               "value": 0
@@ -97268,7 +97268,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IkEndEffectorType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IkEndEffector_Attachment",
               "value": 0
@@ -97283,7 +97283,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IkTargetType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IkTarget_Attachment",
               "value": 0
@@ -97306,7 +97306,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "HandshakeTagType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 18446744073709551615
@@ -97329,7 +97329,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PoseType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "POSETYPE_STATIC",
               "value": 0
@@ -97348,7 +97348,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CAnimationGraphVisualizerPrimitiveType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ANIMATIONGRAPHVISUALIZERPRIMITIVETYPE_Text",
               "value": 0
@@ -97375,7 +97375,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FacingMode",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "FacingMode_Invalid",
               "value": 0
@@ -97402,7 +97402,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IKSolverType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IKSOLVER_Perlin",
               "value": 0
@@ -97433,7 +97433,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EIKEndEffectorRotationFixUpMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -97460,7 +97460,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IKTargetSource",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IKTARGETSOURCE_Bone",
               "value": 0
@@ -97479,7 +97479,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IKTargetCoordinateSystem",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IKTARGETCOORDINATESYSTEM_WorldSpace",
               "value": 0
@@ -97498,7 +97498,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "JointAxis_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "JOINT_AXIS_X",
               "value": 0
@@ -97521,7 +97521,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "JointMotion_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "JOINT_MOTION_FREE",
               "value": 0
@@ -97540,7 +97540,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DynamicContinuousContactBehavior_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "DYNAMIC_CONTINUOUS_ALLOW_IF_REQUESTED_BY_OTHER_BODY",
               "value": 0
@@ -97559,7 +97559,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "soundlevel_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SNDLVL_NONE",
               "value": 0
@@ -97686,7 +97686,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ActionType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SOS_ACTION_NONE",
               "value": 0
@@ -97733,7 +97733,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SosActionStopType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SOS_STOPTYPE_NONE",
               "value": 0
@@ -97752,7 +97752,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SosActionSortType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SOS_SORTTYPE_HIGHEST",
               "value": 0
@@ -97767,7 +97767,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SosGroupType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SOS_GROUPTYPE_DYNAMIC",
               "value": 0
@@ -97782,7 +97782,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SosEditItemType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SOS_EDIT_ITEM_TYPE_SOUNDEVENTS",
               "value": 0
@@ -97813,7 +97813,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixGraphCommandID_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CMD_INVALID",
               "value": 18446744073709551615
@@ -97972,7 +97972,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CVSoundFormat_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "PCM16",
               "value": 0
@@ -97995,7 +97995,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Peak",
               "value": 0
@@ -98010,7 +98010,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PlayBackMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Random",
               "value": 0
@@ -98037,7 +98037,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EMidiNote",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "C",
               "value": 0
@@ -98096,7 +98096,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EWaveform",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "Sine",
               "value": 0
@@ -98123,7 +98123,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixFilterType_t",
           "enum_size": 2,
-          "memebers": [
+          "members": [
             {
               "name": "FILTER_UNKNOWN",
               "value": 18446744073709551615
@@ -98170,7 +98170,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixFilterSlope_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "FILTER_SLOPE_1POLE_6dB",
               "value": 0
@@ -98213,7 +98213,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixProcessorType_t",
           "enum_size": 2,
-          "memebers": [
+          "members": [
             {
               "name": "VPROCESSOR_UNKNOWN",
               "value": 0
@@ -98348,7 +98348,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixLFOShape_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LFO_SHAPE_SINE",
               "value": 0
@@ -98375,7 +98375,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixPannerType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PANNER_TYPE_LINEAR",
               "value": 0
@@ -98390,7 +98390,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixSubgraphSwitchInterpolationType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SUBGRAPH_INTERPOLATION_TEMPORAL_CROSSFADE",
               "value": 0
@@ -98409,7 +98409,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VMixChannelOperation_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "VMIX_CHAN_STEREO",
               "value": 0
@@ -98440,7 +98440,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DisableShadows_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "kDisableShadows_None",
               "value": 0
@@ -98463,7 +98463,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ObjectTypeFlags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "OBJECT_TYPE_NONE",
               "value": 0
@@ -98530,7 +98530,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AggregateInstanceStream_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "AGGREGATE_INSTANCE_STREAM_NONE",
               "value": 0
@@ -98553,7 +98553,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseTestEnumColor_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BLACK",
               "value": 0
@@ -98580,7 +98580,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseTestEnumShape_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CIRCLE",
               "value": 100
@@ -98599,7 +98599,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleSetMethod_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_SET_REPLACE_VALUE",
               "value": 0
@@ -98630,7 +98630,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleControlPointAxis_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_CP_AXIS_X",
               "value": 0
@@ -98661,7 +98661,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleMassMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_MASSMODE_RADIUS_CUBED",
               "value": 0
@@ -98676,7 +98676,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleColorBlendType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_COLOR_BLEND_MULTIPLY",
               "value": 0
@@ -98735,7 +98735,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleImpulseType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IMPULSE_TYPE_NONE",
               "value": 0
@@ -98766,7 +98766,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFalloffFunction_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_FALLOFF_CONSTANT",
               "value": 0
@@ -98785,7 +98785,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimationType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ANIMATION_TYPE_FIXED_RATE",
               "value": 0
@@ -98804,7 +98804,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ClosestPointTestType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_CLOSEST_TYPE_BOX",
               "value": 0
@@ -98823,7 +98823,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "InheritableBoolType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "INHERITABLE_BOOL_INHERIT",
               "value": 0
@@ -98842,7 +98842,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleHitboxBiasType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_HITBOX_BIAS_ENTITY",
               "value": 0
@@ -98857,7 +98857,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleAttrBoxFlags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_ATTR_BOX_FLAGS_NONE",
               "value": 0
@@ -98892,7 +98892,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderModelSubModelFieldType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SUBMODEL_AS_BODYGROUP_SUBMODEL",
               "value": 0
@@ -98915,7 +98915,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleOrientationType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_ORIENTATION_NONE",
               "value": 0
@@ -98938,7 +98938,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PFuncVisualizationType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PFUNC_VISUALIZATION_SPHERE_WIREFRAME",
               "value": 0
@@ -98973,7 +98973,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PetGroundType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PET_GROUND_NONE",
               "value": 0
@@ -98992,7 +98992,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ModelHitboxType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MODEL_HITBOX_TYPE_STANDARD",
               "value": 0
@@ -99015,7 +99015,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SpriteCardShaderType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SPRITECARD_SHADER_BASE",
               "value": 0
@@ -99030,7 +99030,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleTopology_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_TOPOLOGY_POINTS",
               "value": 0
@@ -99057,7 +99057,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleDetailLevel_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLEDETAIL_LOW",
               "value": 0
@@ -99080,7 +99080,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleTraceSet_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_TRACE_SET_ALL",
               "value": 0
@@ -99103,7 +99103,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleCollisionMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "COLLISION_MODE_PER_PARTICLE_TRACE",
               "value": 3
@@ -99130,7 +99130,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleColorBlendMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLEBLEND_DEFAULT",
               "value": 0
@@ -99157,7 +99157,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Detail2Combo_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DETAIL_2_COMBO_UNINITIALIZED",
               "value": 18446744073709551615
@@ -99192,7 +99192,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DetailCombo_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DETAIL_COMBO_OFF",
               "value": 0
@@ -99215,7 +99215,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ScalarExpressionType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SCALAR_EXPRESSION_UNINITIALIZED",
               "value": 18446744073709551615
@@ -99270,7 +99270,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VectorExpressionType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "VECTOR_EXPRESSION_UNINITIALIZED",
               "value": 18446744073709551615
@@ -99317,7 +99317,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "VectorFloatExpressionType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "VECTOR_FLOAT_EXPRESSION_UNINITIALIZED",
               "value": 18446744073709551615
@@ -99352,7 +99352,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MissingParentInheritBehavior_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MISSING_PARENT_DO_NOTHING",
               "value": 18446744073709551615
@@ -99375,7 +99375,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "HitboxLerpType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "HITBOX_LERP_LIFETIME",
               "value": 0
@@ -99390,7 +99390,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleSelection_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_SELECTION_FIRST",
               "value": 0
@@ -99409,7 +99409,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticlePinDistance_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_PIN_DISTANCE_NONE",
               "value": 18446744073709551615
@@ -99464,7 +99464,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleDirectionNoiseType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_DIR_NOISE_PERLIN",
               "value": 0
@@ -99483,7 +99483,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleRotationLockType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_ROTATION_LOCK_NONE",
               "value": 0
@@ -99502,7 +99502,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleEndcapMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_ENDCAP_ALWAYS_ON",
               "value": 18446744073709551615
@@ -99521,7 +99521,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleLightingQuality_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_LIGHTING_PER_PARTICLE",
               "value": 0
@@ -99540,7 +99540,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "StandardLightingAttenuationStyle_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LIGHT_STYLE_OLD",
               "value": 0
@@ -99555,7 +99555,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleTraceMissBehavior_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_TRACE_MISS_BEHAVIOR_NONE",
               "value": 0
@@ -99574,7 +99574,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleOrientationSetMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_ORIENTATION_SET_FROM_VELOCITY",
               "value": 0
@@ -99589,7 +99589,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleLightnintBranchBehavior_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_LIGHTNING_BRANCH_CURRENT_DIR",
               "value": 0
@@ -99604,7 +99604,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleLightFogLightingMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_LIGHT_FOG_LIGHTING_MODE_NONE",
               "value": 0
@@ -99623,7 +99623,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleSequenceCropOverride_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_SEQUENCE_CROP_OVERRIDE_DEFAULT",
               "value": 18446744073709551615
@@ -99642,7 +99642,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleParentSetMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_SET_PARENT_NO",
               "value": 0
@@ -99661,7 +99661,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MaterialProxyType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MATERIAL_PROXY_STATUS_EFFECT",
               "value": 0
@@ -99676,7 +99676,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BBoxVolumeType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BBOX_VOLUME",
               "value": 0
@@ -99695,7 +99695,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleHitboxDataSelection_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_HITBOX_AVERAGE_SPEED",
               "value": 0
@@ -99710,7 +99710,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SnapshotIndexType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SNAPSHOT_INDEX_INCREMENT",
               "value": 0
@@ -99725,7 +99725,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EventTypeSelection_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_EVENT_TYPE_MASK_NONE",
               "value": 0
@@ -99776,7 +99776,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleOrientationChoiceList_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_ORIENTATION_SCREEN_ALIGNED",
               "value": 0
@@ -99807,7 +99807,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleOutputBlendMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_OUTPUT_BLEND_MODE_ALPHA",
               "value": 0
@@ -99842,7 +99842,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleAlphaReferenceType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_ALPHA_REFERENCE_ALPHA_ALPHA",
               "value": 0
@@ -99865,7 +99865,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BlurFilterType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BLURFILTER_GAUSSIAN",
               "value": 0
@@ -99880,7 +99880,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleLightTypeChoiceList_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_LIGHT_TYPE_POINT",
               "value": 0
@@ -99903,7 +99903,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleLightUnitChoiceList_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_LIGHT_UNIT_CANDELAS",
               "value": 0
@@ -99918,7 +99918,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleOmni2LightTypeChoiceList_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_OMNI2_LIGHT_TYPE_POINT",
               "value": 0
@@ -99933,7 +99933,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleLightBehaviorChoiceList_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_LIGHT_BEHAVIOR_FOLLOW_DIRECTION",
               "value": 0
@@ -99952,7 +99952,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleDepthFeatheringMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_DEPTH_FEATHERING_OFF",
               "value": 0
@@ -99971,7 +99971,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleVRHandChoiceList_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_VRHAND_LEFT",
               "value": 0
@@ -99994,7 +99994,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleSortingChoiceList_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_SORTING_NEAREST",
               "value": 0
@@ -100009,7 +100009,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SpriteCardTextureType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SPRITECARD_TEXTURE_DIFFUSE",
               "value": 0
@@ -100064,7 +100064,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SpriteCardTextureChannel_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SPRITECARD_TEXTURE_CHANNEL_MIX_RGB",
               "value": 0
@@ -100131,7 +100131,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SpriteCardPerParticleScale_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SPRITECARD_TEXTURE_PP_SCALE_NONE",
               "value": 0
@@ -100194,7 +100194,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleTextureLayerBlendType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SPRITECARD_TEXTURE_BLEND_MULTIPLY",
               "value": 0
@@ -100229,7 +100229,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticlePostProcessPriorityGroup_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_POST_PROCESS_PRIORITY_LEVEL_VOLUME",
               "value": 0
@@ -100260,7 +100260,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleFogType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_FOG_GAME_DEFAULT",
               "value": 0
@@ -100279,7 +100279,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TextureRepetitionMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TEXTURE_REPETITION_PARTICLE",
               "value": 0
@@ -100294,7 +100294,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ParticleReplicationMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PARTICLE_REPLICATIONMODE_NONE",
               "value": 0
@@ -100309,7 +100309,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ELayoutNodeType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ROOT",
               "value": 0
@@ -100368,7 +100368,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EStyleNodeType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ROOT",
               "value": 0
@@ -100439,7 +100439,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NavAttributeEnum",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "NAV_MESH_AVOID",
               "value": 128
@@ -100530,7 +100530,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NavDirType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "NORTH",
               "value": 0
@@ -100557,7 +100557,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SequenceFinishNotifyState_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "eDoNotNotify",
               "value": 0
@@ -100576,7 +100576,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PointOrientConstraint_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eNone",
               "value": 0
@@ -100591,7 +100591,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PointOrientGoalDirectionType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eAbsOrigin",
               "value": 0
@@ -100618,7 +100618,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PointTemplateOwnerSpawnGroupType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "INSERT_INTO_POINT_TEMPLATE_SPAWN_GROUP",
               "value": 0
@@ -100637,7 +100637,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PointTemplateClientOnlyEntityBehavior_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CREATE_FOR_CURRENTLY_CONNECTED_CLIENTS_ONLY",
               "value": 0
@@ -100652,7 +100652,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PerformanceMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PM_NORMAL",
               "value": 0
@@ -100667,7 +100667,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BreakableContentsType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BC_DEFAULT",
               "value": 0
@@ -100690,7 +100690,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AmmoPosition_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "AMMO_POSITION_INVALID",
               "value": 18446744073709551615
@@ -100713,7 +100713,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ChatIgnoreType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CHAT_IGNORE_NONE",
               "value": 0
@@ -100732,7 +100732,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FixAngleSet_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -100751,7 +100751,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "filter_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FILTER_AND",
               "value": 0
@@ -100766,7 +100766,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "GameAnimEventIndex_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "AE_EMPTY",
               "value": 0
@@ -100937,7 +100937,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ObserverMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "OBS_MODE_NONE",
               "value": 0
@@ -100972,7 +100972,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ObserverInterpState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "OBSERVER_INTERP_NONE",
               "value": 0
@@ -100991,7 +100991,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RumbleEffect_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "RUMBLE_INVALID",
               "value": 18446744073709551615
@@ -101106,7 +101106,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WeaponSound_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WEAPON_SOUND_EMPTY",
               "value": 0
@@ -101213,7 +101213,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AmmoFlags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "AMMO_FORCE_DROP_IF_CARRIED",
               "value": 1
@@ -101232,7 +101232,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EProceduralRagdollWeightIndexPropagationMethod",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Bone",
               "value": 0
@@ -101247,7 +101247,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EDestructiblePartRadiusDamageApplyType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ScaleByExplosionRadius",
               "value": 0
@@ -101262,7 +101262,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EDestructiblePartDamagePassThroughType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Normal",
               "value": 0
@@ -101281,7 +101281,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DestructiblePartDestructionDeathBehavior_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eDoNotKill",
               "value": 0
@@ -101304,7 +101304,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EDestructibleParts_DestroyParameterFlags",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "GenerateBreakpieces",
               "value": 1
@@ -101335,7 +101335,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TakeDamageFlags_t",
           "enum_size": 8,
-          "memebers": [
+          "members": [
             {
               "name": "DFLAG_NONE",
               "value": 0
@@ -101418,7 +101418,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DamageTypes_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DMG_GENERIC",
               "value": 0
@@ -101521,7 +101521,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BaseExplosionTypes_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "EXPLOSION_TYPE_DEFAULT",
               "value": 0
@@ -101596,7 +101596,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CDebugOverlayFilterType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "NONE",
               "value": 0
@@ -101647,7 +101647,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CDebugOverlayFilterTextType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FILTER_TEXT_NONE",
               "value": 0
@@ -101670,7 +101670,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CDebugOverlayCombinedTypes_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ALL",
               "value": 0
@@ -101689,7 +101689,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "HierarchyType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "HIERARCHY_NONE",
               "value": 0
@@ -101720,7 +101720,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Hull_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "HULL_HUMAN",
               "value": 0
@@ -101775,7 +101775,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CanPlaySequence_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CANNOT_PLAY",
               "value": 0
@@ -101794,7 +101794,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ForcedCrouchState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FORCEDCROUCH_NONE",
               "value": 0
@@ -101813,7 +101813,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ScriptedOnDeath_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SS_ONDEATH_NOT_APPLICABLE",
               "value": 18446744073709551615
@@ -101836,7 +101836,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IChoreoServices::ScriptState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SCRIPT_PLAYING",
               "value": 0
@@ -101863,7 +101863,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "IChoreoServices::ChoreoState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "STATE_PRE_SCRIPT",
               "value": 0
@@ -101898,7 +101898,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "InputBitMask_t",
           "enum_size": 8,
-          "memebers": [
+          "members": [
             {
               "name": "IN_NONE",
               "value": 0
@@ -101989,7 +101989,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EInButtonState",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IN_BUTTON_UP",
               "value": 0
@@ -102032,7 +102032,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ShakeCommand_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SHAKE_START",
               "value": 0
@@ -102063,7 +102063,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TimelineCompression_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TIMELINE_COMPRESSION_SUM",
               "value": 0
@@ -102090,7 +102090,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DebugOverlayBits_t",
           "enum_size": 8,
-          "memebers": [
+          "members": [
             {
               "name": "OVERLAY_TEXT_BIT",
               "value": 1
@@ -102261,7 +102261,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ChoreoLookAtMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 18446744073709551615
@@ -102284,7 +102284,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ChoreoLookAtSpeed_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 18446744073709551615
@@ -102307,7 +102307,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Flags_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FL_ONGROUND",
               "value": 1
@@ -102414,7 +102414,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MoveType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "MOVETYPE_NONE",
               "value": 0
@@ -102477,7 +102477,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MoveCollide_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "MOVECOLLIDE_DEFAULT",
               "value": 0
@@ -102508,7 +102508,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SolidType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "SOLID_NONE",
               "value": 0
@@ -102551,7 +102551,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BrushSolidities_e",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BRUSHSOLID_TOGGLE",
               "value": 0
@@ -102570,7 +102570,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntityEffects_t",
           "enum_size": 2,
-          "memebers": [
+          "members": [
             {
               "name": "DEPRICATED_EF_NOINTERP",
               "value": 8
@@ -102605,7 +102605,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderMode_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "kRenderNormal",
               "value": 0
@@ -102664,7 +102664,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RenderFx_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "kRenderFxNone",
               "value": 0
@@ -102751,7 +102751,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CRR_Response::ResponseEnum_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MAX_RESPONSE_NAME",
               "value": 192
@@ -102766,7 +102766,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "LessonPanelLayoutFileTypes_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LAYOUT_HAND_DEFAULT",
               "value": 0
@@ -102785,7 +102785,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Touch_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "touch_none",
               "value": 0
@@ -102812,7 +102812,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "navproperties_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "NAV_IGNORE",
               "value": 1
@@ -102823,7 +102823,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntFinderMethod_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ENT_FIND_METHOD_NEAREST",
               "value": 0
@@ -102842,7 +102842,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ValueRemapperInputType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "InputType_PlayerShootPosition",
               "value": 0
@@ -102857,7 +102857,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ValueRemapperOutputType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "OutputType_AnimationCycle",
               "value": 0
@@ -102880,7 +102880,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ValueRemapperHapticsType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "HaticsType_Default",
               "value": 0
@@ -102895,7 +102895,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ValueRemapperMomentumType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MomentumType_None",
               "value": 0
@@ -102918,7 +102918,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ValueRemapperRatchetType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "RatchetType_Absolute",
               "value": 0
@@ -102933,7 +102933,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PointWorldTextJustifyHorizontal_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "POINT_WORLD_TEXT_JUSTIFY_HORIZONTAL_LEFT",
               "value": 0
@@ -102952,7 +102952,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PointWorldTextJustifyVertical_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "POINT_WORLD_TEXT_JUSTIFY_VERTICAL_BOTTOM",
               "value": 0
@@ -102971,7 +102971,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PointWorldTextReorientMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "POINT_WORLD_TEXT_REORIENT_NONE",
               "value": 0
@@ -102986,7 +102986,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "doorCheck_e",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DOOR_CHECK_FORWARD",
               "value": 0
@@ -103005,7 +103005,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PropDoorRotatingSpawnPos_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DOOR_SPAWN_CLOSED",
               "value": 0
@@ -103028,7 +103028,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PropDoorRotatingOpenDirection_e",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DOOR_ROTATING_OPEN_BOTH_WAYS",
               "value": 0
@@ -103047,7 +103047,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SceneOnPlayerDeath_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SCENE_ONPLAYERDEATH_DO_NOTHING",
               "value": 0
@@ -103062,7 +103062,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ScriptedConflictResponse_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SS_CONFLICT_ENQUEUE",
               "value": 0
@@ -103077,7 +103077,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TRAIN_CODE",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TRAIN_SAFE",
               "value": 0
@@ -103096,7 +103096,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "eSplinePushType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "k_eSplinePushAlong",
               "value": 0
@@ -103115,7 +103115,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NPCFollowFormation_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Default",
               "value": 18446744073709551615
@@ -103142,7 +103142,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseNPCCondition_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "COND_SEE_PLAYER",
               "value": 1
@@ -103169,7 +103169,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseTraceContents_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "STATIC_LEVEL",
               "value": 0
@@ -103184,7 +103184,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PulseCollisionGroup_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DEFAULT",
               "value": 0
@@ -103195,7 +103195,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SoundEventStartType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SOUNDEVENT_START_PLAYER",
               "value": 0
@@ -103214,7 +103214,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TOGGLE_STATE",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TS_AT_TOP",
               "value": 0
@@ -103253,7 +103253,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "FuncDoorSpawnPos_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FUNC_DOOR_SPAWN_CLOSED",
               "value": 0
@@ -103268,7 +103268,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Explosions",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "expRandom",
               "value": 0
@@ -103287,7 +103287,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Materials",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "matGlass",
               "value": 0
@@ -103342,7 +103342,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EOverrideBlockLOS_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BLOCK_LOS_DEFAULT",
               "value": 0
@@ -103361,7 +103361,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MoveLinearAuthoredPos_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MOVELINEAR_AUTHORED_AT_START_POSITION",
               "value": 0
@@ -103380,7 +103380,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TestInputOutputCombinationsEnum_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ZERO",
               "value": 0
@@ -103399,7 +103399,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TrackOrientationType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TrackOrientation_Fixed",
               "value": 0
@@ -103418,7 +103418,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SimpleConstraintSoundProfile::SimpleConstraintsSoundProfileKeypoints_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "kMIN_THRESHOLD",
               "value": 0
@@ -103437,7 +103437,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "HoverPoseFlags_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "eNone",
               "value": 0
@@ -103456,7 +103456,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TrainVelocityType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TrainVelocity_Instantaneous",
               "value": 0
@@ -103475,7 +103475,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "TrainOrientationType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TrainOrientation_Fixed",
               "value": 0
@@ -103498,7 +103498,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "RelativeLocationType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "WORLD_SPACE_POSITION",
               "value": 0
@@ -103521,7 +103521,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NavScope_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "eGround",
               "value": 0
@@ -103548,7 +103548,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "NavScopeFlags_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "eGround",
               "value": 1
@@ -103571,7 +103571,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BeamType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "BEAM_INVALID",
               "value": 0
@@ -103606,7 +103606,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BeamClipStyle_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "kNOCLIP",
               "value": 0
@@ -103629,7 +103629,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SurroundingBoundsType_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "USE_OBB_COLLISION_BOUNDS",
               "value": 0
@@ -103676,7 +103676,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ShatterDamageCause",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "SHATTERDAMAGE_BULLET",
               "value": 0
@@ -103703,7 +103703,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ShatterGlassStressType",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "SHATTERGLASS_BLUNT",
               "value": 0
@@ -103726,7 +103726,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "OnFrame",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "ONFRAME_UNKNOWN",
               "value": 0
@@ -103745,7 +103745,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ShardSolid_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "SHARD_SOLID",
               "value": 0
@@ -103760,7 +103760,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "AnimLoopMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ANIM_LOOP_MODE_INVALID",
               "value": 18446744073709551615
@@ -103787,7 +103787,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntityAttachmentType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eAbsOrigin",
               "value": 0
@@ -103810,7 +103810,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntitySubclassScope_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SUBCLASS_SCOPE_NONE",
               "value": 18446744073709551615
@@ -103833,7 +103833,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "SubclassVDataChangeType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SUBCLASS_VDATA_CREATED",
               "value": 0
@@ -103852,7 +103852,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PlayerConnectedState",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PlayerNeverConnected",
               "value": 18446744073709551615
@@ -103887,7 +103887,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntityDistanceMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eOriginToOrigin",
               "value": 0
@@ -103906,7 +103906,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WeaponSwitchReason_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eDrawn",
               "value": 0
@@ -103933,7 +103933,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WeaponAttackType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eInvalid",
               "value": 18446744073709551615
@@ -103956,7 +103956,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "vote_create_failed_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "VOTE_FAILED_GENERIC",
               "value": 0
@@ -104103,7 +104103,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ItemFlagTypes_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "ITEM_FLAG_NONE",
               "value": 0
@@ -104146,7 +104146,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntityDisolveType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ENTITY_DISSOLVE_INVALID",
               "value": 18446744073709551615
@@ -104173,7 +104173,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "HitGroup_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "HITGROUP_INVALID",
               "value": 18446744073709551615
@@ -104236,7 +104236,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BloodType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 18446744073709551615
@@ -104279,7 +104279,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WaterLevel_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "WL_NotInWater",
               "value": 0
@@ -104314,7 +104314,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "DoorState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DOOR_STATE_CLOSED",
               "value": 0
@@ -104341,7 +104341,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ShadowType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SHADOWS_NONE",
               "value": 0
@@ -104356,7 +104356,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Class_T",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CLASS_NONE",
               "value": 0
@@ -104411,7 +104411,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "Disposition_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "D_ER",
               "value": 0
@@ -104458,7 +104458,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "LatchDirtyPermission_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LATCH_DIRTY_DISALLOW",
               "value": 0
@@ -104489,7 +104489,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "LifeState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LIFE_ALIVE",
               "value": 0
@@ -104516,7 +104516,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "StanceType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "STANCE_CURRENT",
               "value": 18446744073709551615
@@ -104543,7 +104543,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ModifyDamageReturn_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CONTINUE_TO_APPLY_DAMAGE",
               "value": 0
@@ -104558,7 +104558,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "BeginDeathLifeStateTransition_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "TRANSITION_TO_LIFESTATE_DYING",
               "value": 0
@@ -104573,7 +104573,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EntityPlatformTypes_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "ENTITY_NOT_PLATFORM",
               "value": 0
@@ -104592,7 +104592,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WorldTextPanelHorizontalAlign_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WORLDTEXT_HORIZONTAL_ALIGN_LEFT",
               "value": 0
@@ -104611,7 +104611,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WorldTextPanelVerticalAlign_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WORLDTEXT_VERTICAL_ALIGN_TOP",
               "value": 0
@@ -104630,7 +104630,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WorldTextPanelOrientation_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WORLDTEXT_ORIENTATION_DEFAULT",
               "value": 0
@@ -104649,7 +104649,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "attributeprovidertypes_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "PROVIDER_GENERIC",
               "value": 0
@@ -104664,7 +104664,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MoveMountingAmount_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MOVE_MOUNT_NONE",
               "value": 0
@@ -104687,7 +104687,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CSPlayerState",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "STATE_ACTIVE",
               "value": 0
@@ -104734,7 +104734,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CSPlayerBlockingUseAction_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "k_CSPlayerBlockingUseAction_None",
               "value": 0
@@ -104773,7 +104773,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "GrenadeType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "GRENADE_TYPE_EXPLOSIVE",
               "value": 0
@@ -104804,7 +104804,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "QuestProgress::Reason",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "QUEST_NONINITIALIZED",
               "value": 0
@@ -104863,7 +104863,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "loadout_slot_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LOADOUT_SLOT_PROMOTED",
               "value": 18446744073709551614
@@ -105166,7 +105166,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EContributionScoreFlag_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "k_EContributionScoreFlag_Default",
               "value": 0
@@ -105185,7 +105185,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "EKillTypes_t",
           "enum_size": 1,
-          "memebers": [
+          "members": [
             {
               "name": "KILL_NONE",
               "value": 0
@@ -105224,7 +105224,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PreviewCharacterMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DIORAMA",
               "value": 0
@@ -105271,7 +105271,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PreviewWeaponState",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "DROPPED",
               "value": 0
@@ -105302,7 +105302,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "PreviewEOMCelebration",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WALKUP",
               "value": 0
@@ -105401,7 +105401,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CSWeaponType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WEAPONTYPE_KNIFE",
               "value": 0
@@ -105460,7 +105460,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CSWeaponCategory",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WEAPONCATEGORY_OTHER",
               "value": 0
@@ -105495,7 +105495,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CSWeaponSilencerType",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WEAPONSILENCER_NONE",
               "value": 0
@@ -105514,7 +105514,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "MedalRank_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MEDAL_RANK_NONE",
               "value": 0
@@ -105541,7 +105541,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CSWeaponMode",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "Primary_Mode",
               "value": 0
@@ -105560,7 +105560,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "WeaponGameplayAnimState",
           "enum_size": 2,
-          "memebers": [
+          "members": [
             {
               "name": "WPN_ANIMSTATE_UNINITIALIZED",
               "value": 0
@@ -105679,7 +105679,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "C4LightEffect_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "eLightEffectNone",
               "value": 0
@@ -105698,7 +105698,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "gear_slot_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "GEAR_SLOT_INVALID",
               "value": 18446744073709551615
@@ -105773,7 +105773,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "ChickenActivity",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "IDLE",
               "value": 0
@@ -105824,7 +105824,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CompositeMaterialMatchFilterType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MATCH_FILTER_MATERIAL_ATTRIBUTE_EXISTS",
               "value": 0
@@ -105855,7 +105855,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CompositeMaterialVarSystemVar_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "COMPMATSYSVAR_COMPOSITETIME",
               "value": 0
@@ -105870,7 +105870,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CompositeMaterialInputLooseVariableType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LOOSE_VARIABLE_TYPE_BOOLEAN",
               "value": 0
@@ -105937,7 +105937,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CompositeMaterialInputTextureType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "INPUT_TEXTURE_TYPE_DEFAULT",
               "value": 0
@@ -105972,7 +105972,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CompMatPropertyMutatorType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "COMP_MAT_PROPERTY_MUTATOR_INIT",
               "value": 0
@@ -106019,7 +106019,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CompMatPropertyMutatorConditionType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "COMP_MAT_MUTATOR_CONDITION_INPUT_CONTAINER_EXISTS",
               "value": 0
@@ -106038,7 +106038,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "CompositeMaterialInputContainerSourceType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CONTAINER_SOURCE_TYPE_TARGET_MATERIAL",
               "value": 0
@@ -106069,7 +106069,7 @@
           "schema_scope_name": "!GlobalTypes",
           "enum_name": "InventoryNodeType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "NODE_TYPE_INVALID",
               "value": 0
@@ -108537,7 +108537,7 @@
           "schema_scope_name": "animationsystem.dll",
           "enum_name": "PulseMethodCallMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SYNC_WAIT_FOR_COMPLETION",
               "value": 0
@@ -108552,7 +108552,7 @@
           "schema_scope_name": "animationsystem.dll",
           "enum_name": "PulseCursorCancelPriority_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -108575,7 +108575,7 @@
           "schema_scope_name": "animationsystem.dll",
           "enum_name": "PulseBestOutflowRules_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SORT_BY_NUMBER_OF_VALID_CRITERIA",
               "value": 0
@@ -153324,7 +153324,7 @@
           "schema_scope_name": "client.dll",
           "enum_name": "PulseMethodCallMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SYNC_WAIT_FOR_COMPLETION",
               "value": 0
@@ -153339,7 +153339,7 @@
           "schema_scope_name": "client.dll",
           "enum_name": "PulseCursorCancelPriority_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -153362,7 +153362,7 @@
           "schema_scope_name": "client.dll",
           "enum_name": "PulseBestOutflowRules_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SORT_BY_NUMBER_OF_VALID_CRITERIA",
               "value": 0
@@ -153377,7 +153377,7 @@
           "schema_scope_name": "client.dll",
           "enum_name": "C_BaseCombatCharacter::WaterWakeMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "WATER_WAKE_NONE",
               "value": 0
@@ -156002,7 +156002,7 @@
           "schema_scope_name": "particles.dll",
           "enum_name": "PulseMethodCallMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SYNC_WAIT_FOR_COMPLETION",
               "value": 0
@@ -156017,7 +156017,7 @@
           "schema_scope_name": "particles.dll",
           "enum_name": "PulseCursorCancelPriority_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -156040,7 +156040,7 @@
           "schema_scope_name": "particles.dll",
           "enum_name": "PulseBestOutflowRules_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SORT_BY_NUMBER_OF_VALID_CRITERIA",
               "value": 0
@@ -159510,7 +159510,7 @@
           "schema_scope_name": "pulse_system.dll",
           "enum_name": "PulseMethodCallMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SYNC_WAIT_FOR_COMPLETION",
               "value": 0
@@ -159525,7 +159525,7 @@
           "schema_scope_name": "pulse_system.dll",
           "enum_name": "PulseCursorCancelPriority_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -159548,7 +159548,7 @@
           "schema_scope_name": "pulse_system.dll",
           "enum_name": "PulseBestOutflowRules_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SORT_BY_NUMBER_OF_VALID_CRITERIA",
               "value": 0
@@ -219293,7 +219293,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "PulseMethodCallMode_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SYNC_WAIT_FOR_COMPLETION",
               "value": 0
@@ -219308,7 +219308,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "PulseCursorCancelPriority_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "None",
               "value": 0
@@ -219331,7 +219331,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "PulseBestOutflowRules_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "SORT_BY_NUMBER_OF_VALID_CRITERIA",
               "value": 0
@@ -219346,7 +219346,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "CLogicBranchList::LogicBranchListenerLastState_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "LOGIC_BRANCH_LISTENER_NOT_INIT",
               "value": 0
@@ -219369,7 +219369,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "CFuncMover::Move_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "MOVE_LOOP",
               "value": 0
@@ -219388,7 +219388,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "CFuncMover::OrientationUpdate_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "ORIENTATION_FORWARD_PATH",
               "value": 0
@@ -219431,7 +219431,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "CFuncMover::TransitionToPathNodeAction_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "TRANSITION_TO_PATH_NODE_ACTION_NONE",
               "value": 0
@@ -219454,7 +219454,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "CFuncMover::FollowEntityDirection_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "FOLLOW_ENTITY_BIDIRECTIONAL",
               "value": 0
@@ -219473,7 +219473,7 @@
           "schema_scope_name": "server.dll",
           "enum_name": "CPhysicsProp::CrateType_t",
           "enum_size": 4,
-          "memebers": [
+          "members": [
             {
               "name": "CRATE_SPECIFIC_ITEM",
               "value": 0

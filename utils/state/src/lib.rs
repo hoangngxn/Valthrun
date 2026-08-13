@@ -40,7 +40,7 @@ pub enum StateCacheType {
     Timed(Duration),
 
     /// The state will be removed as soon it get's invalidated.
-    /// The update method will only be called once uppon creation.
+    /// The update method will only be called once upon creation.
     Volatile,
 }
 
@@ -199,7 +199,7 @@ impl StateRegistry {
     }
 
     /// Preset a specific state
-    pub fn set<T: State>(&mut self, value: T, params: T::Parameter) -> anyhow::Result<()> {
+    pub fn set<T: State>(&self, value: T, params: T::Parameter) -> anyhow::Result<()> {
         let (cache_key, index) = self
             .allocator
             .borrow_mut()

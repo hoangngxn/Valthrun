@@ -190,7 +190,7 @@ impl PubClient {
                                 Ok(message) => message,
                                 Err(err) => {
                                     log::trace!(
-                                        "Unparseable message ({}): {}",
+                                        "Unparsable message ({}): {}",
                                         err,
                                         String::from_utf8_lossy(message.as_bytes())
                                     );

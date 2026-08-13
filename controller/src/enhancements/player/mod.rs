@@ -86,6 +86,45 @@ impl PlayerESP {
 
         None
     }
+
+    fn draw_offscreen_arrow(
+        &self,
+        draw: &imgui::DrawListMut,
+        position: mint::Vector2<f32>,
+        angle: f32,
+        size: f32,
+        color: [f32; 4],
+    ) {
+        // Create arrow pointing to the right (0 radians)
+        // Then rotate it based on the angle
+        let arrow_points = [
+            [size, 0.0],                // Tip
+            [-size * 0.5, size * 0.6],  // Bottom
+            [-size * 0.5, -size * 0.6], // Top
+        ];
+
+        let cos_angle = angle.cos();
+        let sin_angle = angle.sin();
+
+        let rotated_points: Vec<[f32; 2]> = arrow_points
+            .iter()
+            .map(|[x, y]| {
+                [
+                    position.x + x * cos_angle - y * sin_angle,
+                    position.y + x * sin_angle + y * cos_angle,
+                ]
+            })
+            .collect();
+
+        draw.add_triangle(
+            rotated_points[0],
+            rotated_points[1],
+            rotated_points[2],
+            color,
+        )
+        .filled(true)
+        .build();
+    }
 }
 
 impl Enhancement for PlayerESP {
@@ -95,7 +134,7 @@ impl Enhancement for PlayerESP {
         let settings = ctx.states.resolve::<AppSettings>(())?;
         if self
             .toggle
-            .update(&settings.esp_mode, ctx.input, &settings.esp_toogle)
+            .update(&settings.esp_mode, ctx.input, &settings.esp_toggle)
         {
             ctx.cs2.add_metrics_record(
                 obfstr!("feature-esp-toggle"),
@@ -474,6 +513,19 @@ impl Enhancement for PlayerESP {
                     );
                 }
 
+                if esp_settings.info_ammo && pawn_info.weapon_current_ammo != -1 {
+                    let text = format!(
+                        "{}/{}",
+                        pawn_info.weapon_current_ammo, pawn_info.weapon_reserve_ammo
+                    );
+                    player_info.add_line(
+                        esp_settings
+                            .info_ammo_color
+                            .calculate_color(player_rel_health, distance),
+                        &text,
+                    );
+                }
+
                 if esp_settings.info_hp_text {
                     let text = format!("{} HP", pawn_info.player_health);
                     player_info.add_line(
@@ -484,9 +536,48 @@ impl Enhancement for PlayerESP {
                     );
                 }
 
+                let mut player_utilities = Vec::new();
+                if esp_settings.info_grenades {
+                    if pawn_info.player_has_flash > 0 {
+                        player_utilities.push(format!("Flashbang x{}", pawn_info.player_has_flash));
+                    }
+                    if pawn_info.player_has_smoke {
+                        player_utilities.push("Smoke".to_string());
+                    }
+                    if pawn_info.player_has_hegrenade {
+                        player_utilities.push("HE Grenade".to_string());
+                    }
+                    if pawn_info.player_has_molotov {
+                        player_utilities.push("Molotov".to_string());
+                    }
+                    if pawn_info.player_has_incendiary {
+                        player_utilities.push("Incendiary".to_string());
+                    }
+                    if pawn_info.player_has_decoy {
+                        player_utilities.push("Decoy".to_string());
+                    }
+
+                    if !player_utilities.is_empty() {
+                        player_info.add_line(
+                            esp_settings
+                                .info_grenades_color
+                                .calculate_color(player_rel_health, distance),
+                            &player_utilities.join(", "),
+                        );
+                    }
+                }
+
                 let mut player_flags = Vec::new();
                 if esp_settings.info_flag_kit && pawn_info.player_has_defuser {
                     player_flags.push("Kit");
+                }
+
+                if esp_settings.info_flag_bomb && pawn_info.player_has_bomb {
+                    player_flags.push("Bomb Carrier");
+                }
+
+                if esp_settings.info_flag_scoped && pawn_info.player_is_scoped {
+                    player_flags.push("scoped");
                 }
 
                 if esp_settings.info_flag_flashed && pawn_info.player_flashtime > 0.0 {
@@ -540,6 +631,40 @@ impl Enhancement for PlayerESP {
                     )
                     .thickness(esp_settings.tracer_lines_width)
                     .build();
+                }
+            }
+
+            // Draw offscreen indicators for players not visible on screen
+            if esp_settings.offscreen_arrows {
+                // Use head position for more accurate direction, fallback to body position
+                let target_position = if let Some(head_bone_index) = entry_model
+                    .bones
+                    .iter()
+                    .position(|bone| bone.name == "head_0")
+                {
+                    pawn_model
+                        .bone_states
+                        .get(head_bone_index)
+                        .map(|head_state| head_state.position)
+                        .unwrap_or(pawn_info.position)
+                } else {
+                    // If no head bone, use top of the player hull
+                    entry_model.vhull_max + pawn_info.position
+                };
+
+                if let Some((indicator_pos, angle)) = view.calculate_offscreen_indicator(
+                    &target_position,
+                    esp_settings.offscreen_arrows_radius_from_center,
+                ) {
+                    self.draw_offscreen_arrow(
+                        &draw,
+                        indicator_pos,
+                        angle,
+                        esp_settings.offscreen_arrows_size,
+                        esp_settings
+                            .offscreen_arrows_color
+                            .calculate_color(player_rel_health, distance),
+                    );
                 }
             }
         }

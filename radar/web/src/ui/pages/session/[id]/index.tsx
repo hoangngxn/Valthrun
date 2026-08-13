@@ -8,30 +8,37 @@ import { useAppDispatch } from "../../../../state";
 import { updateRadarSettings } from "../../../../state/radar-settings";
 import { SubscriberClientProvider, useSubscriberClient } from "../../../components/connection";
 import ModalSettings from "./modal-settings";
-import { ContextRadarState, RadarRenderer } from "./radar";
+import { RadarRenderer } from "./radar";
+import { useDocumentFocusState } from "../../../components/container/document-focus-state";
 
 const kServerUrl: string | null = process.env.SERVER_URL;
+const getEndpointUrl = () => {
+    if (typeof kServerUrl === "string") {
+        return kServerUrl;
+    }
+
+    const urlSearch = new URLSearchParams(location.search ?? "");
+    if (urlSearch.has("endpoint")) {
+        return urlSearch.get("endpoint");
+    }
+
+    const parts = [];
+    if (location.protocol === "https:") {
+        parts.push("wss://");
+    } else {
+        parts.push("ws://");
+    }
+    parts.push(location.hostname);
+    if (location.port) {
+        parts.push(`:${location.port}`);
+    }
+    parts.push("/subscribe");
+
+    return parts.join("");
+}
+
 export default React.memo(() => {
-    const dispatch = useAppDispatch();
-    const targetUrl = React.useMemo(() => {
-        if (typeof kServerUrl === "string") {
-            return kServerUrl;
-        }
-
-        const parts = [];
-        if (location.protocol === "https:") {
-            parts.push("wss://");
-        } else {
-            parts.push("ws://");
-        }
-        parts.push(location.hostname);
-        if (location.port) {
-            parts.push(`:${location.port}`);
-        }
-        parts.push("/subscribe");
-
-        return parts.join("");
-    }, []);
+    const targetUrl = React.useMemo(getEndpointUrl, []);
 
     return (
         <Box
@@ -52,12 +59,20 @@ export default React.memo(() => {
                 <ClientStateDisconnected />
             </SubscriberClientProvider>
             <ModalSettings />
-            <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-                <IconButton onClick={() => dispatch(updateRadarSettings({ dialogOpen: true }))} sx={{ mr: 2, mt: 2 }}>
-                    <IconSettings />
-                </IconButton>
+            <Box sx={{ position: "absolute", top: 0, right: 0, pt: 2, pr: 2 }}>
+                <ButtonToggleSettings />
             </Box>
         </Box>
+    );
+});
+
+const ButtonToggleSettings = React.memo(() => {
+    const dispatch = useAppDispatch();
+    const hasFocus = useDocumentFocusState();
+    return (
+        <IconButton onClick={() => dispatch(updateRadarSettings({ dialogOpen: true }))} sx={{ zIndex: 1, opacity: hasFocus ? 1 : 0, transition: ".1s ease-in-out" }}>
+            <IconSettings />
+        </IconButton>
     );
 });
 
@@ -136,9 +151,6 @@ const ClientStateDisconnected = React.memo(() => {
 const ClientStateConnected = React.memo(() => {
     const client = useSubscriberClient();
     const state = useSubscriberClientState();
-    const [radarState, setRadarState] = React.useState<RadarState>(kDefaultRadarState);
-
-    React.useEffect(() => client.events.on("radar.state", (update) => setRadarState(update)), [client]);
 
     if (state.state !== "connected") {
         return;
@@ -155,9 +167,7 @@ const ClientStateConnected = React.memo(() => {
                 justifyContent: "center",
             }}
         >
-            <ContextRadarState.Provider value={radarState}>
-                <RadarRenderer />
-            </ContextRadarState.Provider>
+            <RadarRenderer />
         </Box>
     );
 });

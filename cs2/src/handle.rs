@@ -100,6 +100,9 @@ pub struct CS2Handle {
 impl CS2Handle {
     pub fn create(metrics: bool) -> anyhow::Result<Arc<Self>> {
         let interface = DriverInterface::create_from_env()?;
+        if metrics {
+            let _ = interface.add_metrics_record("application-type", env!("CARGO_CRATE_NAME"));
+        }
 
         if interface
             .driver_features()

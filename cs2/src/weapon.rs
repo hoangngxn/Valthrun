@@ -72,7 +72,8 @@ define_weapons! {
         Unknown { id: 0, name: "Unknown", flags: WEAPON_FLAG_TYPE_KNIFE },
         Deagle { id: 1, name: "Desert Eagle", flags: WEAPON_FLAG_TYPE_PISTOL },
         Elite { id: 2, name: "Elite", flags: 0 },
-        FiveSeven { id: 3, name: "Five-SeveN", flags: WEAPON_FLAG_TYPE_PISTOL },
+        // # spellchecker:ignore-next-line
+        FiveSeven { id: 3, name: "Five-Five-SeveN", flags: WEAPON_FLAG_TYPE_PISTOL },
         Glock { id: 4, name: "Glock-18", flags: WEAPON_FLAG_TYPE_PISTOL },
         Ak47 { id: 7, name: "AK-47", flags: WEAPON_FLAG_TYPE_RIFLE },
         Aug { id: 8, name: "AUG", flags: WEAPON_FLAG_TYPE_RIFLE },

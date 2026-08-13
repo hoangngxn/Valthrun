@@ -34,7 +34,7 @@ pub const fn extension_name() -> &'static CStr {
 
 unsafe extern "system" fn message_callback(
     flag: vk::DebugUtilsMessageSeverityFlagsEXT,
-    typ: vk::DebugUtilsMessageTypeFlagsEXT,
+    ty: vk::DebugUtilsMessageTypeFlagsEXT,
     p_callback_data: *const vk::DebugUtilsMessengerCallbackDataEXT,
     _: *mut c_void,
 ) -> vk::Bool32 {
@@ -42,10 +42,10 @@ unsafe extern "system" fn message_callback(
 
     let message = CStr::from_ptr((*p_callback_data).p_message);
     match flag {
-        Flag::VERBOSE => log::debug!("{typ:?} - {}", message.to_string_lossy()),
-        Flag::INFO => log::info!("{typ:?} - {}", message.to_string_lossy()),
-        Flag::WARNING => log::warn!("{typ:?} - {}", message.to_string_lossy()),
-        _ => log::error!("{typ:?} - {}", message.to_string_lossy()),
+        Flag::VERBOSE => log::debug!("{ty:?} - {}", message.to_string_lossy()),
+        Flag::INFO => log::info!("{ty:?} - {}", message.to_string_lossy()),
+        Flag::WARNING => log::warn!("{ty:?} - {}", message.to_string_lossy()),
+        _ => log::error!("{ty:?} - {}", message.to_string_lossy()),
     }
     vk::FALSE
 }

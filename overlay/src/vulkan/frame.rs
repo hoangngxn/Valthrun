@@ -72,7 +72,7 @@ impl Drop for FrameData {
                 .device
                 .wait_for_fences(&[self.render_fence], true, 10_000_000)
             {
-                log::error!("Failed to wait on fence for frame data destory: {}", err);
+                log::error!("Failed to wait on fence for frame data destroy: {}", err);
             }
 
             self.device.destroy_fence(self.render_fence, None);

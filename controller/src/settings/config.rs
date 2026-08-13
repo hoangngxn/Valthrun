@@ -264,11 +264,14 @@ pub struct AppSettings {
     #[serde(default = "default_key_settings")]
     pub key_settings: HotKey,
 
+    #[serde(default = "bool_false")]
+    pub key_settings_ignore_insert_warning: bool,
+
     #[serde(default = "default_esp_mode")]
     pub esp_mode: KeyToggleMode,
 
     #[serde(default = "default_key_none")]
-    pub esp_toogle: Option<HotKey>,
+    pub esp_toggle: Option<HotKey>,
 
     #[serde(default = "default_esp_configs")]
     pub esp_settings: BTreeMap<String, EspConfig>,
@@ -278,6 +281,9 @@ pub struct AppSettings {
 
     #[serde(default = "bool_true")]
     pub bomb_timer: bool,
+
+    #[serde(default = "bool_true")]
+    pub bomb_label: bool,
 
     #[serde(default = "bool_false")]
     pub spectators_list: bool,

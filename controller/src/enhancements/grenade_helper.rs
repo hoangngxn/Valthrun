@@ -14,6 +14,7 @@ use cs2::{
 };
 use cs2_schema_generated::cs2::client::{
     C_BaseEntity,
+    C_CSPlayerPawn,
     C_CSPlayerPawnBase,
 };
 use imgui::Condition;
@@ -127,7 +128,9 @@ impl State for StateGrenadeHelperPlayerLocation {
                 .m_vecAbsOrigin()?,
         );
 
-        let eye_angles = Vector2::from_column_slice(&local_entity.m_angEyeAngles()?[0..2]);
+        let eye_angles = Vector2::from_column_slice(
+            &local_entity.cast::<dyn C_CSPlayerPawn>().m_angEyeAngles()?[0..2],
+        );
         Ok(Self::Valid {
             eye_position: local_position + DEFAULT_EYE_HEIGHT,
             eye_direction: eye_angles,
@@ -166,7 +169,7 @@ impl Enhancement for GrenadeHelper {
             eye_direction: local_direction,
         } = *ctx.states.resolve(())?
         else {
-            /* The error message contains, why we do not have a position but this is ignoreable */
+            /* The error message contains, why we do not have a position but this is ignorable */
             return Ok(());
         };
 

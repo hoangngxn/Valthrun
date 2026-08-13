@@ -12,7 +12,7 @@ use crate::{
     mod_name_from_schema_name,
     ClassReference,
     EmitOutput,
-    InheritageMap,
+    InheritanceMap,
     Metadata,
 };
 
@@ -36,7 +36,7 @@ impl ClassDefinition {
         &self,
         mod_name: &str,
         output: &mut dyn EmitOutput,
-        inheritage: &InheritageMap,
+        inheritance: &InheritanceMap,
     ) -> anyhow::Result<()> {
         let class_name = self.class_name.replace(":", "_");
 
@@ -58,7 +58,7 @@ impl ClassDefinition {
         output.pop_ident();
         output.emit_line(&format!("}}"))?;
 
-        for class in inheritage.get_inherited_classes(&ClassReference {
+        for class in inheritance.get_inherited_classes(&ClassReference {
             class_name: self.class_name.clone(),
             module_name: mod_name_from_schema_name(&mod_name).to_string(),
         }) {

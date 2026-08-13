@@ -7,13 +7,15 @@ export type ContainerSize = {
     height: number
 };
 
-export default (props: {
+type Props = {
     sx?: SxProps<Theme>,
     children: (size: ContainerSize) => React.ReactNode
-}) => {
+};
+
+export default React.forwardRef<HTMLDivElement, Props>((props, refForward) => {
     const [currentSize, setSize] = useState<ContainerSize>({ width: 1, height: 1 });
 
-    const refContainer = useRef<HTMLDivElement>();
+    const refLocal = useRef<HTMLDivElement>(null);
     const observer = useMemo(() => {
         return new ResizeObserver(events => {
             const event = events[events.length - 1];
@@ -23,17 +25,24 @@ export default (props: {
     }, [setSize]);
 
     useEffect(() => {
-        if (!refContainer.current) {
+        if (!refLocal.current) {
             return;
         }
 
-        observer.observe(refContainer.current);
+        observer.observe(refLocal.current);
         return () => observer.disconnect();
-    }, [refContainer, observer]);
+    }, [refLocal, observer]);
 
     return (
         <Box
-            ref={refContainer}
+            ref={(node: HTMLDivElement) => {
+                refLocal.current = node;
+                if (typeof refForward === "function") {
+                    refForward(node);
+                } else if (refForward) {
+                    refForward.current = node;
+                }
+            }}
             sx={{
                 position: "absolute",
 
@@ -48,4 +57,4 @@ export default (props: {
             {props.children(currentSize)}
         </Box>
     )
-};
+});

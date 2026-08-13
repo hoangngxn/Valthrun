@@ -15,19 +15,69 @@ export interface SubscriberClientEvents {
     "radar.state": RadarState;
 }
 
+export class UpdateStatistics {
+    private readonly alpha: number = 0.98;
+
+    private timestampLastUpdate: number | null = null;
+
+    private history: number[] = [];
+    private historyIndex: number = 0;
+
+    private movingAverage: number = 0;
+
+    constructor() {
+        this.history = [...new Array(100)];
+        this.history.fill(0);
+    }
+
+    public logUpdate() {
+        const now = performance.now();
+        if (!this.timestampLastUpdate) {
+            this.timestampLastUpdate = now;
+        } else {
+            const passed = now - this.timestampLastUpdate;
+            this.timestampLastUpdate = now;
+
+            this.history[this.historyIndex] = passed;
+            this.historyIndex = (this.historyIndex + 1) % this.history.length;
+
+            this.movingAverage = this.movingAverage * this.alpha + passed * (1 - this.alpha);
+        }
+    }
+
+    public getAverageInterval(): number {
+        return this.movingAverage;
+    }
+
+    public getLastInterval(): number {
+        return this.history[this.historyIndex];
+    }
+
+    public getHistory(): Readonly<number[]> {
+        return this.history;
+    }
+}
+
 export class SubscriberClient {
     readonly events: EventEmitter<SubscriberClientEvents>;
+    readonly stateUpdateStatistics: UpdateStatistics = new UpdateStatistics();
 
     private currentState: SubscriberClientState;
     private connection: WebSocket | null;
+    private currentRadarState: RadarState | null;
+
 
     private commandHandler: { [T in S2CMessage["type"]]?: (payload: (S2CMessage & { type: T })["payload"]) => void } =
         {};
 
     constructor(readonly targetAddress: string) {
         this.events = new EventEmitter();
+        this.events.setMaxListeners(60);
+
         this.currentState = { state: "new" };
         this.connection = null;
+
+        (window as any).s = this.stateUpdateStatistics;
 
         this.commandHandler = {};
         this.commandHandler["response-error"] = (payload) => {
@@ -45,12 +95,18 @@ export class SubscriberClient {
         };
 
         this.commandHandler["notify-radar-state"] = (payload) => {
+            this.currentRadarState = payload.state;
+            this.stateUpdateStatistics.logUpdate();
             this.events.emit("radar.state", payload.state);
         };
 
         this.commandHandler["notify-session-closed"] = () => {
             this.updateState({ state: "disconnected" });
         };
+    }
+
+    public getCurrentRadarState(): Readonly<RadarState> {
+        return this.currentRadarState;
     }
 
     public getState(): Readonly<SubscriberClientState> {

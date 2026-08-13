@@ -258,7 +258,7 @@ fn create_vulkan_physical_device_and_get_graphics_and_present_qs_indices(
                     .enumerate_device_extension_properties(device)
                     .expect("Failed to get device ext properties")
             };
-            let extention_support = extension_props.iter().any(|ext| {
+            let extension_support = extension_props.iter().any(|ext| {
                 let name = unsafe { CStr::from_ptr(ext.extension_name.as_ptr()) };
                 khr::swapchain::NAME == name
             });
@@ -279,7 +279,7 @@ fn create_vulkan_physical_device_and_get_graphics_and_present_qs_indices(
 
             graphics.is_some()
                 && present.is_some()
-                && extention_support
+                && extension_support
                 && !formats.is_empty()
                 && !present_modes.is_empty()
         })

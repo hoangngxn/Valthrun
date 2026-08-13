@@ -13,6 +13,7 @@ import { appStore } from "../state";
 import PageMain from "./pages/main";
 import PageSession from "./pages/session/[id]";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { DocumentFocusStateProvider } from "./components/container/document-focus-state";
 
 const theme = createTheme({
     palette: {
@@ -29,22 +30,24 @@ export const App = React.memo(() => {
                 <RecoilRoot>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        <QueryClientProvider client={queryClient}>
-                            <BrowserRouter>
-                                <Box
-                                    sx={{
-                                        height: "100%",
-                                        width: "100%",
-                                    }}
-                                >
-                                    <Routes>
-                                        <Route path="/" element={<PageMain />} />
-                                        <Route path="/session/:sessionId" element={<PageSession />} />
-                                        <Route path={"*"} element={<Navigate to={"/"} />} />
-                                    </Routes>
-                                </Box>
-                            </BrowserRouter>
-                        </QueryClientProvider>
+                        <DocumentFocusStateProvider>
+                            <QueryClientProvider client={queryClient}>
+                                <BrowserRouter>
+                                    <Box
+                                        sx={{
+                                            height: "100%",
+                                            width: "100%",
+                                        }}
+                                    >
+                                        <Routes>
+                                            <Route path="/" element={<PageMain />} />
+                                            <Route path="/session/:sessionId" element={<PageSession />} />
+                                            <Route path={"*"} element={<Navigate to={"/"} />} />
+                                        </Routes>
+                                    </Box>
+                                </BrowserRouter>
+                            </QueryClientProvider>
+                        </DocumentFocusStateProvider>
                     </ThemeProvider>
                 </RecoilRoot>
             </StateProvider>

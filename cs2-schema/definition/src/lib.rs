@@ -1,6 +1,5 @@
 mod definition;
 use std::{
-    collections::BTreeMap,
     fs,
     path::Path,
 };
@@ -14,37 +13,24 @@ pub use definition_enum::*;
 mod definition_class;
 pub use definition_class::*;
 
-mod inheritage;
-pub use inheritage::*;
+mod inheritance;
+pub use inheritance::*;
 
 mod writer;
-use serde::{
-    Deserialize,
-    Serialize,
-};
 pub use writer::*;
-
-#[derive(Debug, Default, Deserialize, Serialize)]
-pub struct DumpedSchema {
-    pub cs2_revision: String,
-    pub cs2_build_datetime: String,
-
-    pub resolved_offsets: BTreeMap<String, u64>,
-    pub scopes: Vec<SchemaScope>,
-}
 
 pub fn emit_to_dir(target: impl AsRef<Path>, scopes: &[SchemaScope]) -> anyhow::Result<()> {
     let target = target.as_ref();
     fs::create_dir_all(target).context("mkdirs")?;
 
-    let inheritage = InheritageMap::build(scopes);
+    let inheritance = InheritanceMap::build(scopes);
     for scope in scopes.iter() {
         let mut writer = FileEmitter::new(target.join(format!(
             "{}.rs",
             mod_name_from_schema_name(&scope.schema_name)
         )))?;
 
-        scope.emit_rust_definition(&mut writer, &inheritage)?;
+        scope.emit_rust_definition(&mut writer, &inheritance)?;
     }
 
     /* create the mod.rs */

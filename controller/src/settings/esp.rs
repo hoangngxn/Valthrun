@@ -206,6 +206,7 @@ pub enum EspHeadDot {
 }
 
 #[derive(Clone, Copy, Deserialize, Serialize, PartialEq, PartialOrd)]
+#[serde(default)]
 pub struct EspPlayerSettings {
     pub box_type: EspBoxType,
     pub box_color: EspColor,
@@ -234,18 +235,31 @@ pub struct EspPlayerSettings {
     pub info_weapon: bool,
     pub info_weapon_color: EspColor,
 
+    pub info_ammo: bool,
+    pub info_ammo_color: EspColor,
+
     pub info_hp_text: bool,
     pub info_hp_text_color: EspColor,
 
     pub info_flag_kit: bool,
+    pub info_flag_scoped: bool,
     pub info_flag_flashed: bool,
+    pub info_flag_bomb: bool,
     pub info_flags_color: EspColor,
+
+    pub info_grenades: bool,
+    pub info_grenades_color: EspColor,
 
     pub head_dot: EspHeadDot,
     pub head_dot_color: EspColor,
     pub head_dot_thickness: f32,
     pub head_dot_base_radius: f32,
     pub head_dot_z: f32,
+
+    pub offscreen_arrows: bool,
+    pub offscreen_arrows_color: EspColor,
+    pub offscreen_arrows_size: f32,
+    pub offscreen_arrows_radius_from_center: f32,
 }
 
 const ESP_COLOR_FRIENDLY: EspColor = EspColor::from_rgba(0.0, 1.0, 0.0, 0.75);
@@ -301,20 +315,95 @@ impl EspPlayerSettings {
             info_weapon: false,
             info_weapon_color: color.clone(),
 
+            info_ammo: false,
+            info_ammo_color: color.clone(),
+
             info_flag_kit: false,
+            info_flag_scoped: false,
             info_flag_flashed: false,
+            info_flag_bomb: false,
             info_flags_color: color.clone(),
+
+            info_grenades: false,
+            info_grenades_color: color.clone(),
 
             head_dot: EspHeadDot::None,
             head_dot_color: color.clone(),
             head_dot_thickness: 2.0,
             head_dot_base_radius: 3.0,
             head_dot_z: 1.0,
+
+            offscreen_arrows: false,
+            offscreen_arrows_color: color.clone(),
+            offscreen_arrows_size: 15.0,
+            offscreen_arrows_radius_from_center: 50.0,
+        }
+    }
+}
+
+impl Default for EspPlayerSettings {
+    fn default() -> Self {
+        let neutral_color = EspColor::from_rgba(1.0, 1.0, 1.0, 0.75);
+
+        Self {
+            box_type: EspBoxType::None,
+            box_color: neutral_color,
+            box_width: 3.0,
+
+            skeleton: true,
+            skeleton_color: neutral_color,
+            skeleton_width: 3.0,
+
+            health_bar: EspHealthBar::None,
+            health_bar_width: 10.0,
+
+            tracer_lines: EspTracePosition::None,
+            tracer_lines_color: neutral_color,
+            tracer_lines_width: 1.0,
+
+            info_distance: false,
+            info_distance_color: neutral_color,
+
+            near_players: false,
+            near_players_distance: 20.0,
+
+            info_hp_text: false,
+            info_hp_text_color: neutral_color,
+
+            info_name: false,
+            info_name_color: neutral_color,
+
+            info_weapon: false,
+            info_weapon_color: neutral_color,
+
+            info_ammo: false,
+            info_ammo_color: neutral_color,
+
+            info_flag_kit: false,
+            info_flag_scoped: false,
+            info_flag_flashed: false,
+            info_flag_bomb: false,
+            info_flags_color: neutral_color,
+
+            info_grenades: false,
+            info_grenades_color: neutral_color,
+
+            head_dot: EspHeadDot::None,
+            head_dot_color: neutral_color,
+            head_dot_thickness: 2.0,
+            head_dot_base_radius: 3.0,
+            head_dot_z: 1.0,
+
+            offscreen_arrows: false,
+            offscreen_arrows_color: neutral_color,
+            offscreen_arrows_size: 15.0,
+            offscreen_arrows_radius_from_center: 50.0,
         }
     }
 }
 
 #[derive(Clone, Copy, Deserialize, Serialize, PartialEq, PartialOrd)]
+#[serde(default)]
 pub struct EspChickenSettings {
     pub box_type: EspBoxType,
     pub box_color: EspColor,
@@ -326,13 +415,38 @@ pub struct EspChickenSettings {
     pub info_owner_color: EspColor,
 }
 
+impl Default for EspChickenSettings {
+    fn default() -> Self {
+        Self {
+            box_type: EspBoxType::None,
+            box_color: EspColor::default(),
+            skeleton: false,
+            skeleton_color: EspColor::default(),
+            info_owner: false,
+            info_owner_color: EspColor::default(),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Deserialize, Serialize, PartialEq, PartialOrd)]
+#[serde(default)]
 pub struct EspWeaponSettings {
     pub draw_box: bool,
     pub draw_box_color: EspColor,
 
     pub info_name: bool,
     pub info_name_color: EspColor,
+}
+
+impl Default for EspWeaponSettings {
+    fn default() -> Self {
+        Self {
+            draw_box: false,
+            draw_box_color: EspColor::default(),
+            info_name: false,
+            info_name_color: EspColor::default(),
+        }
+    }
 }
 
 #[derive(Clone, Copy, Deserialize, Serialize, PartialEq, PartialOrd)]

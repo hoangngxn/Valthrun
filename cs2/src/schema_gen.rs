@@ -1,4 +1,5 @@
 use std::{
+    self,
     collections::{
         btree_map::Entry,
         BTreeMap,
@@ -185,6 +186,7 @@ fn parse_type(
                             "CUtlSymbolLarge" => "PtrCStr",
                             "CUtlString" => "dyn CUtlString",
                             "Vector" => "[f32; 0x03]",
+                            "VectorWS" => "[f32; 0x03]", // TODO: What is this?
                             "QAngle" => "[f32; 0x04]",
 
                             "Color" => "Color", // TODO: What is this (3x or 4x f32?)?
@@ -202,7 +204,7 @@ fn parse_type(
                         .read_string(memory.view())?
                         .context("missing var type")?;
                     if !value.starts_with("CUtlVector<")
-                        || !value.starts_with("C_NetworkUtlVectorBase<")
+                        && !value.starts_with("C_NetworkUtlVectorBase<")
                     {
                         return Ok(None);
                     }
@@ -250,10 +252,14 @@ fn parse_type(
         }
         TypeCategory::DeclaredClass => {
             let type_class = schema_type.cast::<dyn CSchemaTypeDeclaredClass>();
-            let type_class = type_class
-                .declaration()?
-                .value_copy(memory.view())?
-                .context("missing declared class declaration")?;
+
+            let type_class = match type_class.declaration()?.value_copy(memory.view())? {
+                Some(type_class) => type_class,
+                None => {
+                    log::warn!("Encountered null class declaration");
+                    return Ok(None);
+                }
+            };
 
             //let module_name = type_class.module_name()?.read_string(cs2)?;
             let module_name = type_class
@@ -331,9 +337,7 @@ fn read_enum_binding(
         binding_ptr.address,
         definition.enum_name
     );
-    definition
-        .memebers
-        .reserve(binding.member_count()? as usize);
+    definition.members.reserve(binding.member_count()? as usize);
     for member in binding
         .members()?
         .elements(memory.view(), 0..binding.member_count()? as usize)?
@@ -344,7 +348,7 @@ fn read_enum_binding(
             .context("missing enum member name")?;
 
         let member_value = member.value()?;
-        definition.memebers.push(EnumMember {
+        definition.members.push(EnumMember {
             name: member_name,
             value: member_value,
         });
@@ -507,7 +511,7 @@ fn read_class_binding(
     Ok((class_type_scope_name, definition))
 }
 
-pub fn dump_schema(
+pub fn dump_schema_scopes(
     states: &StateRegistry,
     scope_filter: Option<&[&str]>,
 ) -> anyhow::Result<Vec<SchemaScope>> {

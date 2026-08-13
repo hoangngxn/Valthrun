@@ -119,7 +119,7 @@ impl WebRadarPublisher {
         loop {
             tokio::select! {
                 event = self.transport_rx.recv() => {
-                    let event = event.context("transport closed unexpectetly")?;
+                    let event = event.context("transport closed unexpectedly")?;
                     self.handle_event(event)?;
                 },
                 _ = self.generate_interval.tick() => {

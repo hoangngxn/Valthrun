@@ -194,14 +194,14 @@ pub fn create_vulkan_instance(
         .engine_version(vk::make_api_version(0, 1, 0, 0))
         .api_version(vk::make_api_version(0, 1, 1, 0));
 
-    let mut debug_messanger_ext = debug::create_extension_info();
+    let mut debug_messenger_ext = debug::create_extension_info();
     let enabled_extension_names = ext_builder.enabled_extension_names();
     let enabled_layer_names = ext_builder.enabled_layer_names();
     let instance_create_info = vk::InstanceCreateInfo::default()
         .application_info(&app_info)
         .enabled_extension_names(&enabled_extension_names)
         .enabled_layer_names(&enabled_layer_names)
-        .push_next(&mut debug_messanger_ext);
+        .push_next(&mut debug_messenger_ext);
 
     log::debug!("Creating Vulkan instance");
     {

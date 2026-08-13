@@ -255,7 +255,7 @@ impl SettingsUI {
 
                         {
                             let _enabled = ui.begin_enabled(matches!(settings.esp_mode, KeyToggleMode::Toggle | KeyToggleMode::Trigger));
-                            ui.button_key_optional(obfstr!("ESP toggle/trigger"), &mut settings.esp_toogle, [150.0, 0.0]);
+                            ui.button_key_optional(obfstr!("ESP Toggle/Hold"), &mut settings.esp_toggle, [150.0, 0.0]);
                         }
                         
                         {
@@ -267,14 +267,15 @@ impl SettingsUI {
                     if let Some(_tab) = ui.tab_item(obfstr!("Visuals")) {
                         ui.set_next_item_width(150.0);
                         ui.combo_enum(obfstr!("ESP"), &[
-                            (KeyToggleMode::Off, "Always Off"),
-                            (KeyToggleMode::Trigger, "Trigger"),
-                            (KeyToggleMode::TriggerInverted, "Trigger Inverted"),
+                            (KeyToggleMode::Off, "Off"),
+                            (KeyToggleMode::Trigger, "Hold"),
+                            (KeyToggleMode::TriggerInverted, "Hold Inverted"),
                             (KeyToggleMode::Toggle, "Toggle"),
-                            (KeyToggleMode::AlwaysOn, "Always On"),
+                            (KeyToggleMode::AlwaysOn, "On"),
                         ], &mut settings.esp_mode);
 
                         ui.checkbox(obfstr!("Bomb Timer"), &mut settings.bomb_timer);
+                        ui.checkbox(obfstr!("Bomb Label"), &mut settings.bomb_label);
                         ui.checkbox(obfstr!("Spectators List"), &mut settings.spectators_list);
                         ui.checkbox(obfstr!("Grenade Helper"), &mut settings.grenade_helper.active);
                         ui.checkbox(obfstr!("Sniper Crosshair"), &mut settings.sniper_crosshair);
@@ -305,11 +306,11 @@ impl SettingsUI {
                     if let Some(_) = ui.tab_item(obfstr!("Aim Assist")) {
                         ui.set_next_item_width(150.0);
                         ui.combo_enum(obfstr!("Trigger Bot"), &[
-                            (KeyToggleMode::Off, "Always Off"),
-                            (KeyToggleMode::Trigger, "Trigger"),
-                            (KeyToggleMode::TriggerInverted, "Trigger Inverted"),
+                            (KeyToggleMode::Off, "Off"),
+                            (KeyToggleMode::Trigger, "Hold"),
+                            (KeyToggleMode::TriggerInverted, "Hold Inverted"),
                             (KeyToggleMode::Toggle, "Toggle"),
-                            (KeyToggleMode::AlwaysOn, "Always On"),
+                            (KeyToggleMode::AlwaysOn, "On"),
                         ], &mut settings.trigger_bot_mode);
 
                         if !matches!(settings.trigger_bot_mode, KeyToggleMode::Off | KeyToggleMode::AlwaysOn) {
@@ -444,8 +445,9 @@ impl SettingsUI {
                     }
 
                     if let Some(_) = ui.tab_item("Web Radar") {
-                        ui.text(obfstr!("Operating the Valthrun Web Radar within the Valthrun Overlay is no longer supported."));
-                        ui.text(obfstr!("Please use the standalone radar client."));
+                        ui.text(obfstr!("The Valthrun Web Radar has been moved into an own application which runs outside of the Valthrun CS2 overlay."));
+                        ui.text(obfstr!("More information on how to run the CS2 web radar can be found here:"));
+                        ui.text(obfstr!("https://wiki.valth.run/link/6"));
                     }
 
                     if let Some(_) = ui.tab_item("Misc") {
@@ -609,7 +611,7 @@ impl SettingsUI {
                 const COMBO_WIDTH: f32 = 150.0;
                 {
                     const ESP_BOX_TYPES: [(EspBoxType, &'static str); 3] = [
-                        (EspBoxType::None, "No"),
+                        (EspBoxType::None, "Off"),
                         (EspBoxType::Box2D, "2D"),
                         (EspBoxType::Box3D, "3D"),
                     ];
@@ -626,8 +628,8 @@ impl SettingsUI {
                     }
 
                     const PLAYER_SKELETON_TYPES: [(PlayerSkeletonType, &'static str); 2] = [
-                        (PlayerSkeletonType::None, "No"),
-                        (PlayerSkeletonType::Skeleton, "Show"),
+                        (PlayerSkeletonType::None, "Off"),
+                        (PlayerSkeletonType::Skeleton, "On"),
                     ];
 
                     let mut skeleton_type = if config.skeleton {
@@ -650,9 +652,9 @@ impl SettingsUI {
 
                 {
                     const HEAD_DOT_TYPES: [(EspHeadDot, &'static str); 3] = [
-                        (EspHeadDot::None, "No"),
+                        (EspHeadDot::None, "Off"),
                         (EspHeadDot::Filled, "Filled"),
-                        (EspHeadDot::NotFilled, "Not Filled"),
+                        (EspHeadDot::NotFilled, "Outlined"),
                     ];
 
                     ui.set_next_item_width(COMBO_WIDTH);
@@ -661,12 +663,12 @@ impl SettingsUI {
 
                 {
                     const TRACER_LINE_TYPES: [(EspTracePosition, &'static str); 7] = [
-                        (EspTracePosition::None, "No"),
+                        (EspTracePosition::None, "Off"),
                         (EspTracePosition::TopLeft, "Top left"),
-                        (EspTracePosition::TopCenter, "Top (center)"),
+                        (EspTracePosition::TopCenter, "Top center"),
                         (EspTracePosition::TopRight, "Top right"),
                         (EspTracePosition::BottomLeft, "Bottom left"),
-                        (EspTracePosition::BottomCenter, "Bottom (center)"),
+                        (EspTracePosition::BottomCenter, "Bottom center"),
                         (EspTracePosition::BottomRight, "Bottom right"),
                     ];
 
@@ -680,7 +682,7 @@ impl SettingsUI {
 
                 {
                     const HEALTH_BAR_TYPES: [(EspHealthBar, &'static str); 5] = [
-                        (EspHealthBar::None, "No"),
+                        (EspHealthBar::None, "Off"),
                         (EspHealthBar::Top, "Top"),
                         (EspHealthBar::Left, "Left"),
                         (EspHealthBar::Bottom, "Bottom"),
@@ -699,16 +701,24 @@ impl SettingsUI {
                 ui.text("Player Info");
                 ui.checkbox(obfstr!("Name"), &mut config.info_name);
                 ui.checkbox(obfstr!("Weapon"), &mut config.info_weapon);
+                ui.checkbox(obfstr!("Ammo"), &mut config.info_ammo);
                 ui.checkbox(obfstr!("Distance"), &mut config.info_distance);
                 ui.checkbox(obfstr!("Health"), &mut config.info_hp_text);
                 ui.checkbox(obfstr!("Kit"), &mut config.info_flag_kit);
+                ui.checkbox(obfstr!("Scoped"), &mut config.info_flag_scoped);
                 ui.checkbox(obfstr!("Flashed"), &mut config.info_flag_flashed);
+                ui.checkbox(obfstr!("Bomb Carrier"), &mut config.info_flag_bomb);
+                ui.checkbox(obfstr!("Grenades"), &mut config.info_grenades);
                 ui.checkbox(obfstr!("Near only"), &mut config.near_players);
                 if config.near_players {
                     ui.same_line();
                     ui.slider_config("Max distance", 0.0, 50.0)
                         .build(&mut config.near_players_distance);
                 }
+
+                ui.dummy([0.0, 10.0]);
+                ui.text("Offscreen Players");
+                ui.checkbox(obfstr!("Arrows"), &mut config.offscreen_arrows);
             }
         }
 
@@ -861,6 +871,13 @@ impl SettingsUI {
                     ui.table_next_row();
                     Self::render_esp_settings_player_style_color(
                         ui,
+                        obfstr!("Color info ammo"),
+                        &mut config.info_ammo_color,
+                    );
+
+                    ui.table_next_row();
+                    Self::render_esp_settings_player_style_color(
+                        ui,
                         obfstr!("Color info health"),
                         &mut config.info_hp_text_color,
                     );
@@ -870,6 +887,38 @@ impl SettingsUI {
                         ui,
                         obfstr!("Color info player flags"),
                         &mut config.info_flags_color,
+                    );
+
+                    ui.table_next_row();
+                    Self::render_esp_settings_player_style_color(
+                        ui,
+                        obfstr!("Color info grenades"),
+                        &mut config.info_grenades_color,
+                    );
+
+                    ui.table_next_row();
+                    Self::render_esp_settings_player_style_color(
+                        ui,
+                        obfstr!("Offscreen arrow color"),
+                        &mut config.offscreen_arrows_color,
+                    );
+
+                    ui.table_next_row();
+                    Self::render_esp_settings_player_style_width(
+                        ui,
+                        obfstr!("Offscreen arrow size"),
+                        5.0,
+                        40.0,
+                        &mut config.offscreen_arrows_size,
+                    );
+
+                    ui.table_next_row();
+                    Self::render_esp_settings_player_style_width(
+                        ui,
+                        obfstr!("Offscreen arrows radius from center"),
+                        20.0,
+                        500.0,
+                        &mut config.offscreen_arrows_radius_from_center,
                     );
                 }
             }
@@ -1360,6 +1409,10 @@ impl SettingsUI {
                 GrenadeSettingsTarget::Map {
                     map_name: "de_vertigo".to_owned(),
                     display_name: "Vertigo".to_owned(),
+                },
+                GrenadeSettingsTarget::Map {
+                    map_name: "de_cache".to_owned(),
+                    display_name: "Cache".to_owned(),
                 },
             ] {
                 self.render_grenade_target(settings, ui, &target);
@@ -1971,7 +2024,7 @@ impl SettingsUI {
             GrenadeHelperTransferState::ExportSuccess { target_path } => {
                 let mut popup_open = true;
                 if let Some(_popup) = ui
-                    .modal_popup_config("Export successfull")
+                    .modal_popup_config("Export successful")
                     .opened(&mut popup_open)
                     .always_auto_resize(true)
                     .begin_popup()
@@ -1986,7 +2039,7 @@ impl SettingsUI {
                         popup_open = false;
                     }
                 } else {
-                    ui.open_popup("Export successfull");
+                    ui.open_popup("Export successful");
                 }
 
                 if !popup_open {
@@ -2010,7 +2063,7 @@ impl SettingsUI {
                         popup_open = false;
                     }
                 } else {
-                    ui.open_popup("Import successfull");
+                    ui.open_popup("Import successful");
                 }
 
                 if !popup_open {

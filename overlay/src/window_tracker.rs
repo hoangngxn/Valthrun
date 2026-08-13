@@ -91,7 +91,7 @@ impl OverlayTarget {
                         && window_rect.right == 0
                         && window_rect.top == 0
                     {
-                        /* Window is not intendet to be shown. */
+                        /* Window is not intended to be shown. */
                         continue;
                     }
 
@@ -104,7 +104,7 @@ impl OverlayTarget {
                 }
 
                 if iterations == MAX_ITERATIONS {
-                    log::warn!("FindWindowExA seems to be cought in a loop.");
+                    log::warn!("FindWindowExA seems to be caught in a loop.");
                 }
 
                 Default::default()
@@ -181,7 +181,7 @@ impl WindowTracker {
                 false, // Don't do a complete repaint (may flicker)
             );
 
-            // Request repaint, so we acknoledge the new bounds
+            // Request repaint, so we acknowledge the new bounds
             SendMessageA(
                 self.overlay_hwnd,
                 WM_PAINT,

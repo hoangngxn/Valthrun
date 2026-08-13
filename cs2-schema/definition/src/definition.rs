@@ -7,7 +7,7 @@ use crate::{
     ClassDefinition,
     EmitOutput,
     EnumDefinition,
-    InheritageMap,
+    InheritanceMap,
 };
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct SchemaScope {
@@ -36,7 +36,7 @@ impl SchemaScope {
     pub fn emit_rust_definition(
         &self,
         output: &mut dyn EmitOutput,
-        inheritage: &InheritageMap,
+        inheritance: &InheritanceMap,
     ) -> anyhow::Result<()> {
         output.emit_line("use super::*;")?;
         output.emit_line("use crate::*;")?;
@@ -56,7 +56,7 @@ impl SchemaScope {
         self.classes
             .iter()
             .try_for_each(|definition| -> anyhow::Result<()> {
-                definition.emit(&self.schema_name, output, inheritage)?;
+                definition.emit(&self.schema_name, output, inheritance)?;
                 output.emit_line("")?;
                 Ok(())
             })?;

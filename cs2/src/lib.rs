@@ -9,7 +9,7 @@ pub mod schema;
 mod offsets;
 pub use offsets::*;
 
-mod state;
+pub mod state;
 pub use state::*;
 
 mod entity;
@@ -39,3 +39,5 @@ pub use vtd_libum::{
     },
     InterfaceError,
 };
+
+pub mod schema_runtime;

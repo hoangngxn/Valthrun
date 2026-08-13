@@ -23,7 +23,7 @@ pub struct EnumDefinition {
     #[serde(default)]
     pub metadata: Vec<Metadata>,
 
-    pub memebers: Vec<EnumMember>,
+    pub members: Vec<EnumMember>,
 }
 
 impl EnumDefinition {
@@ -45,7 +45,7 @@ impl EnumDefinition {
         output.emit_line(&format!("impl {enum_name} {{"))?;
         output.push_ident();
 
-        self.memebers
+        self.members
             .iter()
             .try_for_each(|offset| offset.emit(output, &enum_type, value_mask))?;
 

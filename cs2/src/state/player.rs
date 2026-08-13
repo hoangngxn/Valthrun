@@ -10,10 +10,13 @@ use anyhow::{
 use cs2_schema_cutl::EntityHandle;
 use cs2_schema_generated::cs2::client::{
     CCSPlayer_ItemServices,
+    CCSPlayer_WeaponServices,
     CGameSceneNode,
+    CPlayer_WeaponServices,
     CSkeletonInstance,
     C_BaseEntity,
     C_BasePlayerPawn,
+    C_BasePlayerWeapon,
     C_CSPlayerPawn,
     C_CSPlayerPawnBase,
     C_EconEntity,
@@ -43,9 +46,20 @@ pub struct StatePawnInfo {
 
     pub player_health: i32,
     pub player_has_defuser: bool,
+    pub player_has_bomb: bool,
     pub player_name: Option<String>,
     pub weapon: WeaponId,
+    pub weapon_current_ammo: i32,
+    pub weapon_reserve_ammo: i32,
+    pub player_is_scoped: bool,
     pub player_flashtime: f32,
+
+    pub player_has_flash: u32,
+    pub player_has_smoke: bool,
+    pub player_has_hegrenade: bool,
+    pub player_has_molotov: bool,
+    pub player_has_incendiary: bool,
+    pub player_has_decoy: bool,
 
     pub position: nalgebra::Vector3<f32>,
     pub rotation: f32,
@@ -91,6 +105,47 @@ impl State for StatePawnInfo {
             .cast::<dyn CCSPlayer_ItemServices>()
             .m_bHasDefuser()?;
 
+        let weapon_services = player_pawn
+            .m_pWeaponServices()?
+            .value_reference(memory.view_arc())
+            .context("m_pWeaponServices nullptr")?
+            .cast::<dyn CCSPlayer_WeaponServices>();
+
+        let ammo = weapon_services.m_iAmmo()?;
+
+        let mut player_has_flash = 0;
+        let mut player_has_smoke = false;
+        let mut player_has_hegrenade = false;
+        let mut player_has_molotov = false;
+        let mut player_has_incendiary = false;
+        let mut player_has_decoy = false;
+
+        let grenade_slots = [
+            (15, &mut player_has_smoke),
+            (13, &mut player_has_hegrenade),
+            (17, &mut player_has_decoy),
+        ];
+
+        if let Some(count) = ammo.get(14) {
+            player_has_flash = *count as u32;
+        }
+
+        for (index, flag) in grenade_slots {
+            if let Some(count) = ammo.get(index) {
+                *flag = *count > 0;
+            }
+        }
+
+        if let Some(count) = ammo.get(16) {
+            if *count > 0 {
+                match player_team {
+                    2 => player_has_molotov = true,    // Terrorist
+                    3 => player_has_incendiary = true, // Counter-Terrorist
+                    _ => {}                            // Unknown team
+                }
+            }
+        }
+
         /* Will be an instance of CSkeletonInstance */
         let game_screen_node = player_pawn
             .m_pGameSceneNode()?
@@ -102,11 +157,19 @@ impl State for StatePawnInfo {
         let position =
             nalgebra::Vector3::<f32>::from_column_slice(&game_screen_node.m_vecAbsOrigin()?);
 
-        let weapon = player_pawn
-            .m_pClippingWeapon()?
-            .value_reference(memory.view_arc());
-        let weapon_type = if let Some(weapon) = weapon {
+        let active_weapon_handle = weapon_services
+            .cast::<dyn CPlayer_WeaponServices>()
+            .m_hActiveWeapon()?;
+        let weapon_ref = if active_weapon_handle.is_valid() {
+            entities
+                .entity_from_handle(&active_weapon_handle)
+                .and_then(|weapon| weapon.value_reference(memory.view_arc()))
+        } else {
+            None
+        };
+        let weapon_type = if let Some(weapon) = &weapon_ref {
             weapon
+                .cast::<dyn C_EconEntity>()
                 .m_AttributeManager()?
                 .m_Item()?
                 .m_iItemDefinitionIndex()?
@@ -114,7 +177,23 @@ impl State for StatePawnInfo {
             WeaponId::Knife.id()
         };
 
+        let (weapon_current_ammo, weapon_reserve_ammo) = if let Some(weapon) = weapon_ref.as_ref() {
+            let weapon = weapon.cast::<dyn C_BasePlayerWeapon>();
+            (weapon.m_iClip1()?, weapon.m_pReserveAmmo()?[0])
+        } else {
+            (-1, 0)
+        };
+
         let player_flashtime = player_pawn.m_flFlashBangTime()?;
+        let player_is_scoped = player_pawn.m_bIsScoped()?;
+
+        // Use cached bomb carrier state instead of iterating through all entities
+        let player_has_bomb = if let Ok(bomb_carrier) = states.resolve::<super::BombCarrierInfo>(())
+        {
+            bomb_carrier.carrier_entity_id == Some(handle.get_entity_index())
+        } else {
+            false
+        };
 
         Ok(Self {
             controller_entity_id: if controller_handle.is_valid() {
@@ -128,9 +207,20 @@ impl State for StatePawnInfo {
 
             player_name,
             player_has_defuser,
+            player_has_bomb,
             player_health,
             weapon: WeaponId::from_id(weapon_type).unwrap_or(WeaponId::Unknown),
+            weapon_current_ammo,
+            weapon_reserve_ammo,
+            player_is_scoped,
             player_flashtime,
+
+            player_has_flash,
+            player_has_smoke,
+            player_has_hegrenade,
+            player_has_molotov,
+            player_has_incendiary,
+            player_has_decoy,
 
             position,
             rotation: player_pawn.m_angEyeAngles()?[1],

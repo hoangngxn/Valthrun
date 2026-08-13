@@ -35,14 +35,14 @@ pub enum BoneFlags {
     FlagAnimation = 0x40,
     FlagMesh = 0x80,
     FlagHitbox = 0x100,
-    FlagBoneUsedByVertexLod0 = 0x400,
-    FlagBoneUsedByVertexLod1 = 0x800,
-    FlagBoneUsedByVertexLod2 = 0x1000,
-    FlagBoneUsedByVertexLod3 = 0x2000,
-    FlagBoneUsedByVertexLod4 = 0x4000,
-    FlagBoneUsedByVertexLod5 = 0x8000,
-    FlagBoneUsedByVertexLod6 = 0x10000,
-    FlagBoneUsedByVertexLod7 = 0x20000,
+    FlagBoneUsedByVertexLoad0 = 0x400,
+    FlagBoneUsedByVertexLoad1 = 0x800,
+    FlagBoneUsedByVertexLoad2 = 0x1000,
+    FlagBoneUsedByVertexLoad3 = 0x2000,
+    FlagBoneUsedByVertexLoad4 = 0x4000,
+    FlagBoneUsedByVertexLoad5 = 0x8000,
+    FlagBoneUsedByVertexLoad6 = 0x10000,
+    FlagBoneUsedByVertexLoad7 = 0x20000,
     FlagBoneMergeRead = 0x40000,
     FlagBoneMergeWrite = 0x80000,
     FlagAllBoneFlags = 0xfffff,
@@ -66,8 +66,8 @@ pub struct CS2Model {
     pub vhull_min: nalgebra::Vector3<f32>,
     pub vhull_max: nalgebra::Vector3<f32>,
 
-    pub vview_min: nalgebra::Vector3<f32>,
-    pub vview_max: nalgebra::Vector3<f32>,
+    pub view_min: nalgebra::Vector3<f32>,
+    pub view_max: nalgebra::Vector3<f32>,
 }
 
 impl State for CS2Model {
@@ -105,12 +105,8 @@ impl CS2Model {
         let memory = cs2.create_memory_view();
         let memory_view = &*memory;
 
-        [
-            self.vhull_min,
-            self.vhull_max,
-            self.vview_min,
-            self.vview_max,
-        ] = cs2.read_sized::<[nalgebra::Vector3<f32>; 4]>(address + 0x18)?;
+        [self.vhull_min, self.vhull_max, self.view_min, self.view_max] =
+            cs2.read_sized::<[nalgebra::Vector3<f32>; 4]>(address + 0x18)?;
 
         let model = Reference::<dyn CModel>::new(memory.clone(), address);
         let bone_count = model.bone_count()? as usize;

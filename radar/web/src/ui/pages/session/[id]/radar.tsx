@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import * as React from "react";
 import { kDefaultRadarState, UpdateStatistics } from "../../../../backend/connection";
 import { LoadedMap, loadMap } from "../../../../map-info";
+import { getMapLevel, getMapPosition, getMapLevelImage, getOtherVerticalLevel, resetMapVolumeCache } from "../../../../map-info/geometry";
 import ImageBomb from "../../../../assets/bomb.png";
 import { useAppSelector } from "../../../../state";
 import BombIndicator from "../../../components/bomb/bomb-indicator";
@@ -52,7 +53,7 @@ const useQueryMap = (worldName: string) => {
     });
 };
 
-const useCurrentMap = () => {
+export const useCurrentMap = () => {
     const worldName = useRadarState(
         React.useCallback(state => state.worldName, [])
     );
@@ -207,8 +208,10 @@ const MapContainer = React.memo((props: { renderStatistics: UpdateStatistics }) 
     const refContainer = React.useRef(null);
 
     const currentMap = useCurrentMap();
-    const [showAllLayers, marginLeft, marginRight, marginTop, marginBottom] = useAppSelector(state => [
+    const [showAllLayers, showLevelOverlap, levelOverlapOpacity, marginLeft, marginRight, marginTop, marginBottom] = useAppSelector(state => [
         state.radarSettings.showAllLayers,
+        state.radarSettings.showLevelOverlap,
+        state.radarSettings.levelOverlapOpacity,
         state.radarSettings.mapMarginLeft,
         state.radarSettings.mapMarginRight,
         state.radarSettings.mapMarginTop,
@@ -219,6 +222,8 @@ const MapContainer = React.memo((props: { renderStatistics: UpdateStatistics }) 
         const position = state.playerPawns.find(pawn => pawn.controllerEntityId === state.localControllerEntityId)?.position ?? [0, 0, 0];
         return getMapLevel(currentMap, position);
     }, [currentMap]));
+
+    React.useEffect(() => resetMapVolumeCache(), [currentMap]);
 
     return (
         <React.Fragment>
@@ -234,7 +239,8 @@ const MapContainer = React.memo((props: { renderStatistics: UpdateStatistics }) 
                 bottom: `${marginBottom}%`,
             }}>
                 {size => {
-                    if (showAllLayers && currentMap.verticalSections.length > 1) {
+                    const isVolume = currentMap.volumes.some(volume => volume.name === localMapLevel);
+                    if (showAllLayers && !showLevelOverlap && currentMap.verticalSections.length > 1 && !isVolume) {
                         const minAxis = Math.min(size.width, size.height);
                         const maxAxis = Math.max(size.width, size.height);
 
@@ -264,7 +270,10 @@ const MapContainer = React.memo((props: { renderStatistics: UpdateStatistics }) 
                                     alignSelf: "center",
                                 }}
                             >
-                                <MapLevel level={localMapLevel} />
+                                <MapLevel
+                                    level={localMapLevel}
+                                    overlap={showLevelOverlap ? levelOverlapOpacity : undefined}
+                                />
                             </SquareContainer>
                         );
                     }
@@ -278,13 +287,13 @@ const MapContainer = React.memo((props: { renderStatistics: UpdateStatistics }) 
 const MapImage = React.memo((props: { level: string }) => {
     const currentMap = useCurrentMap();
     const mapStyle = useAppSelector(state => state.radarSettings.mapStyle);
-    const mapImage = currentMap.mapStyles.find(style => style.name === mapStyle) ?? currentMap.mapStyles[0] ?? null;
+    const image = React.useMemo(() => getMapLevelImage(currentMap, mapStyle, props.level), [currentMap, mapStyle, props.level]);
     return (
         <Box
             sx={{
                 height: "100%",
                 width: "100%",
-                backgroundImage: `url("${mapImage?.map[props.level as keyof typeof mapImage.map]}")`,
+                backgroundImage: `url("${image ?? ""}")`,
                 backgroundPosition: "center",
                 backgroundSize: "cover",
             }}
@@ -360,13 +369,43 @@ const CssVariableProvider = (props: { targetRef: React.RefObject<HTMLElement>, r
     return null;
 };
 
-const MapLevel = React.memo((props: { level: string }) => {
-    const { level } = props;
+const MapLevel = React.memo((props: { level: string, overlap?: number }) => {
+    const { level, overlap } = props;
     const currentMap = useCurrentMap();
+
+    /*
+     * The level the player is not on, drawn behind the current one when the
+     * overlap setting is on. When that level is above the player it is faded
+     * out further so it does not obscure the lower floor view.
+     */
+    const otherLevel = React.useMemo(
+        () => (overlap === undefined ? null : getOtherVerticalLevel(currentMap, level)),
+        [overlap, currentMap, level],
+    );
+    const otherOpacity = React.useMemo(() => {
+        if (overlap === undefined || !otherLevel) {
+            return 0;
+        }
+
+        return otherLevel.isAbove ? overlap * 0.35 : overlap;
+    }, [overlap, otherLevel]);
 
     const visiblePawnIds = useRadarState(React.useCallback(state => state.playerPawns.filter(pawn => getMapLevel(currentMap, pawn.position) === level).map(pawn => pawn.pawnEntityId), [currentMap, level]));
     const visibleC4EntityIds = useRadarState(React.useCallback(state => state.c4Entities.filter(entity => getMapLevel(currentMap, entity.position) === level).map(entity => entity.entityId), [currentMap, level]));
     const plantedC4Position = useRadarState(React.useCallback(state => state.plantedC4 && getMapLevel(currentMap, state.plantedC4.position) === level ? state.plantedC4.position : null, [currentMap, level]));
+
+    const otherPawnIds = useRadarState(React.useCallback(
+        state => otherLevel ? state.playerPawns.filter(pawn => getMapLevel(currentMap, pawn.position) === otherLevel.level).map(pawn => pawn.pawnEntityId) : [],
+        [currentMap, otherLevel],
+    ));
+    const otherC4EntityIds = useRadarState(React.useCallback(
+        state => otherLevel ? state.c4Entities.filter(entity => getMapLevel(currentMap, entity.position) === otherLevel.level).map(entity => entity.entityId) : [],
+        [currentMap, otherLevel],
+    ));
+    const otherPlantedC4Position = useRadarState(React.useCallback(
+        state => otherLevel && state.plantedC4 && getMapLevel(currentMap, state.plantedC4.position) === otherLevel.level ? state.plantedC4.position : null,
+        [currentMap, otherLevel],
+    ));
 
     const [mapScale, colorDotCT, colorDotT, colorDotOwn] = useAppSelector(state => [
         state.radarSettings.mapScale,
@@ -411,25 +450,34 @@ const MapLevel = React.memo((props: { level: string }) => {
                 }
             }}
         >
-            <MapImage level={props.level} />
-            {visiblePawnIds.map(pawnId => <MapPlayerPawn key={`pawn-${pawnId}`} pawnId={pawnId} />)}
-            {visibleC4EntityIds.map(entityId => <MapC4 key={`c4-${entityId}`} entityId={entityId} />)}
-            {plantedC4Position ? <MapIconC4 position={getMapPosition(currentMap, plantedC4Position)} key="planted-c4" /> : null}
+            {otherLevel && otherOpacity > 0 && (
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        opacity: otherOpacity,
+                        pointerEvents: "none",
+                    }}
+                >
+                    <MapImage level={otherLevel.level} />
+                    {otherPawnIds.map(pawnId => <MapPlayerPawn key={`other-pawn-${pawnId}`} pawnId={pawnId} />)}
+                    {otherC4EntityIds.map(entityId => <MapC4 key={`other-c4-${entityId}`} entityId={entityId} />)}
+                    {otherPlantedC4Position ? <MapIconC4 position={getMapPosition(currentMap, otherPlantedC4Position)} key="other-planted-c4" /> : null}
+                </Box>
+            )}
+
+            <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+                <MapImage level={level} />
+                {visiblePawnIds.map(pawnId => <MapPlayerPawn key={`pawn-${pawnId}`} pawnId={pawnId} />)}
+                {visibleC4EntityIds.map(entityId => <MapC4 key={`c4-${entityId}`} entityId={entityId} />)}
+                {plantedC4Position ? <MapIconC4 position={getMapPosition(currentMap, plantedC4Position)} key="planted-c4" /> : null}
+            </Box>
         </Box>
     );
 });
-
-const getMapLevel = (map: LoadedMap, position: [F32, F32, F32]): string => {
-    return map.verticalSections.find(section => section.altitudeMin <= position[2] && position[2] < section.altitudeMax)?.name ?? "default";
-}
-
-const getMapPosition = (map: LoadedMap, position: [number, number, number]): [number, number] => {
-    const mapSize = map.scale * 1024;
-    return [
-        (position[0] - map.pos_x) * 100 / mapSize,
-        (position[1] - map.pos_y) * 100 / -mapSize
-    ];
-};
 
 
 export const MapPlayerPawn = React.memo((props: { pawnId: number }) => {

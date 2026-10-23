@@ -42,6 +42,11 @@ module.exports = {
                 },
             },
             {
+                /* Map overview data (resource/overviews/*.txt) is inlined as a string. */
+                test: /\.txt$/,
+                type: "asset/source",
+            },
+            {
                 test: /\.(woff(2)?|eot|ttf|otf|)$/,
                 type: "asset",
                 parser: {
@@ -60,9 +65,22 @@ module.exports = {
     },
     output: {
         filename: "assets/web-radar.[contenthash].js",
+        chunkFilename: "assets/[name].[contenthash].js",
         path: path.resolve(__dirname, "dist"),
         publicPath: "/",
         clean: true,
+    },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                defaultVendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendors",
+                    priority: -10,
+                    reuseExistingChunk: true,
+                },
+            },
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({

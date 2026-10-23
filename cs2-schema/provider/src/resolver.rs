@@ -3,6 +3,15 @@ use crate::{
     PROVIDER_INSTANCE,
 };
 
+/// Probe version-dependent fields without panicking when a game schema lacks them.
+pub fn try_resolve_offset(offset: &OffsetInfo) -> Option<u64> {
+    PROVIDER_INSTANCE
+        .read()
+        .ok()?
+        .as_ref()?
+        .resolve_offset(offset)
+}
+
 #[macro_export]
 macro_rules! runtime_offset {
     ($default_value:expr, $module:expr, $class_name:expr, $class_member:expr) => {{

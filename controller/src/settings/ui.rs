@@ -352,6 +352,7 @@ impl SettingsUI {
                         }
 
                         ui.checkbox("Simple Recoil Helper", &mut settings.aim_assist_recoil);
+                        ui.text_wrapped("Controls recoil without a target and works with recoil-aware aiming.");
                     }
 
                     if let Some(_) = ui.tab_item(obfstr!("Aimbot")) {
@@ -403,6 +404,7 @@ impl SettingsUI {
                                 .display_format(obfstr!("%.0f px"))
                                 .build(&mut settings.aimbot_fov_radius);
                             ui.checkbox(obfstr!("Show FOV Circle"), &mut settings.aimbot_show_fov);
+                            ui.text_wrapped("FOV follows the predicted shot direction. The orange marker excludes random spread.");
                             ui.checkbox(obfstr!("Show Debug Window"), &mut settings.aimbot_show_debug);
                             
                             ui.separator();
@@ -417,6 +419,7 @@ impl SettingsUI {
                             ui.separator();
                             ui.text(obfstr!("Recoil Control System (RCS)"));
                             ui.checkbox(obfstr!("Enable RCS"), &mut settings.aimbot_rcs_enabled);
+                            ui.text_wrapped("Aim using recoil-adjusted shot direction. Strength 1.0 gives full recoil compensation; the Simple Recoil Helper is not added twice.");
                             
                             let _enabled = ui.begin_enabled(settings.aimbot_rcs_enabled);
                             ui.slider_config(obfstr!("RCS Horizontal Strength"), 0.0, 2.0)

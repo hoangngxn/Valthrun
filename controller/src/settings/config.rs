@@ -354,11 +354,11 @@ pub struct AppSettings {
     #[serde(default)]
     pub aimbot_rcs_enabled: bool,
 
-    /// RCS horizontal compensation strength (0.0 to 2.0)
+    /// RCS horizontal compensation strength (0.0 to 2.0; 1.0 = full measured recoil)
     #[serde(default = "default_aimbot_rcs_x")]
     pub aimbot_rcs_x: f32,
 
-    /// RCS vertical compensation strength (0.0 to 2.0)  
+    /// RCS vertical compensation strength (0.0 to 2.0; 1.0 = full measured recoil)
     #[serde(default = "default_aimbot_rcs_y")]
     pub aimbot_rcs_y: f32,
 

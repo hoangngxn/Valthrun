@@ -73,7 +73,7 @@ use crate::{
     enhancements::{
         sniper_crosshair::SniperCrosshair,
         AimBot,
-        AntiAimPunsh,
+        AimInput,
         BombInfoIndicator,
         BombLabelIndicator,
         PlayerESP,
@@ -600,8 +600,12 @@ fn real_main(args: &AppArgs) -> anyhow::Result<()> {
         cs2: cs2.clone(),
 
         enhancements: vec![
-            Rc::new(RefCell::new(AntiAimPunsh::new(cvar_sensitivity))),
-            Rc::new(RefCell::new(AimBot::new())),
+            Rc::new(RefCell::new(AimBot::new(AimInput {
+                sensitivity: cvar_sensitivity,
+                pitch: cvars.find_cvar("m_pitch")?.context("missing m_pitch")?,
+                yaw: cvars.find_cvar("m_yaw")?.context("missing m_yaw")?,
+                recoil_scale: cvars.find_cvar("weapon_recoil_scale")?.context("missing weapon_recoil_scale")?,
+            }))),
             Rc::new(RefCell::new(PlayerESP::new())),
             Rc::new(RefCell::new(SpectatorsListIndicator::new())),
             Rc::new(RefCell::new(BombInfoIndicator::new())),

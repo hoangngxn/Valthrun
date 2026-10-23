@@ -1,6 +1,9 @@
 mod player;
 pub use player::*;
 
+mod recoil;
+pub use recoil::*;
+
 mod observer;
 pub use observer::*;
 

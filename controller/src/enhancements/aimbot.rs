@@ -1,30 +1,41 @@
 use std::time::Instant;
 
-use anyhow::Context;
 use cs2::{
     BoneFlags,
-    ClassNameCache,
+    CEntityIdentityEx,
     CS2Model,
+    ClassNameCache,
+    LocalCameraControllerTarget,
     MouseState,
+    PlayerPawnState,
     StateCS2Memory,
     StateEntityList,
     StateLocalPlayerController,
     StatePawnInfo,
     StatePawnModelInfo,
-    LocalCameraControllerTarget,
-    PlayerPawnState,
-    CEntityIdentityEx,
 };
-use cs2_schema_generated::cs2::client::C_BasePlayerPawn;
 use imgui::Condition;
 use nalgebra::Vector3;
 use obfstr::obfstr;
 use overlay::UnicodeTextRenderer;
 use utils_state::StateRegistry;
 
-use super::Enhancement;
+use super::{
+    aim::{
+        aim_correction,
+        direction,
+        mouse_counts,
+        shot_error,
+        AimInput,
+        RecoilHistory,
+    },
+    Enhancement,
+};
 use crate::{
-    settings::{AppSettings, BoneTarget},
+    settings::{
+        AppSettings,
+        BoneTarget,
+    },
     view::{
         KeyToggle,
         ViewController,
@@ -33,52 +44,72 @@ use crate::{
 };
 
 pub struct AimBot {
+    input: AimInput,
+    recoil_history: RecoilHistory,
+    shot_screen_position: Option<[f32; 2]>,
+    local_identity: Option<(u32, u32)>,
+    recoil_source: Option<&'static str>,
     toggle: KeyToggle,
     last_target_entity_id: Option<u32>,
     last_smoothing_time: Instant,
     current_target_position: Option<Vector3<f32>>,
     last_rcs_values: Option<(f32, f32)>,
+    movement_remainder: [f32; 2],
 }
 
 impl AimBot {
-    pub fn new() -> Self {
+    pub fn new(input: AimInput) -> Self {
         Self {
+            input,
+            recoil_history: RecoilHistory::default(),
+            shot_screen_position: None,
+            local_identity: None,
+            recoil_source: None,
             toggle: KeyToggle::new(),
             last_target_entity_id: None,
             last_smoothing_time: Instant::now(),
             current_target_position: None,
             last_rcs_values: None,
+            movement_remainder: [0.0; 2],
         }
+    }
+
+    fn reset_tracking(&mut self) {
+        self.last_target_entity_id = None;
+        self.current_target_position = None;
+        self.last_rcs_values = None;
+        self.movement_remainder = [0.0; 2];
+    }
+
+    fn reset(&mut self) {
+        self.reset_tracking();
+        self.recoil_history.reset();
+        self.shot_screen_position = None;
+        self.local_identity = None;
+        self.recoil_source = None;
     }
 
     fn get_bone_position(
         &self,
         bone_target: BoneTarget,
-        pawn_info: &StatePawnInfo,
         pawn_model: &StatePawnModelInfo,
         model: &CS2Model,
         view: &ViewController,
         screen_center: [f32; 2],
     ) -> Option<Vector3<f32>> {
         match bone_target {
-            BoneTarget::Head => {
-                // Use standard head position offset
-                Some(pawn_info.position + Vector3::new(0.0, 0.0, 64.0))
-            }
+            BoneTarget::Head => Self::find_bone_by_name(model, &["head_0", "head"], pawn_model),
             BoneTarget::Neck => {
-                // Find neck bone or approximate position
-                self.find_bone_by_name(model, &["neck", "spine_3"], pawn_model)
-                    .or_else(|| Some(pawn_info.position + Vector3::new(0.0, 0.0, 60.0)))
+                // Skip unavailable bones instead of guessing a standing pose.
+                Self::find_bone_by_name(model, &["neck_0", "neck", "spine_3"], pawn_model)
             }
             BoneTarget::Chest => {
                 // Find chest/spine bones
-                self.find_bone_by_name(model, &["spine_2", "chest", "spine_1"], pawn_model)
-                    .or_else(|| Some(pawn_info.position + Vector3::new(0.0, 0.0, 40.0)))
+                Self::find_bone_by_name(model, &["spine_2", "chest", "spine_1"], pawn_model)
             }
             BoneTarget::Stomach => {
                 // Find stomach/pelvis bones
-                self.find_bone_by_name(model, &["pelvis", "spine_0"], pawn_model)
-                    .or_else(|| Some(pawn_info.position + Vector3::new(0.0, 0.0, 20.0)))
+                Self::find_bone_by_name(model, &["pelvis", "spine_0"], pawn_model)
             }
             BoneTarget::Closest => {
                 // Find bone closest to crosshair
@@ -88,7 +119,6 @@ impl AimBot {
     }
 
     fn find_bone_by_name(
-        &self,
         model: &CS2Model,
         bone_names: &[&str],
         pawn_model: &StatePawnModelInfo,
@@ -98,10 +128,13 @@ impl AimBot {
                 if index >= pawn_model.bone_states.len() {
                     continue;
                 }
-                
-                let bone_name_lower = bone.name.to_lowercase();
-                if bone_name_lower.contains(&bone_name.to_lowercase()) {
-                    return Some(pawn_model.bone_states[index].position);
+
+                // Exact names avoid selecting similarly named helper bones.
+                if bone.name.eq_ignore_ascii_case(bone_name) {
+                    let position = pawn_model.bone_states[index].position;
+                    if position.iter().all(|value| value.is_finite()) {
+                        return Some(position);
+                    }
                 }
             }
         }
@@ -129,7 +162,10 @@ impl AimBot {
             }
 
             let bone_position = pawn_model.bone_states[index].position;
-            
+            if !bone_position.iter().all(|value| value.is_finite()) {
+                continue;
+            }
+
             // Project to screen and check distance to crosshair
             if let Some(screen_pos) = view.world_to_screen(&bone_position, false) {
                 let distance = ((screen_pos.x - screen_center[0]).powi(2)
@@ -146,7 +182,11 @@ impl AimBot {
         closest_position
     }
 
-    fn find_best_target(&self, ctx: &UpdateContext) -> anyhow::Result<Option<AimTarget>> {
+    fn find_best_target(
+        &self,
+        ctx: &UpdateContext,
+        screen_center: [f32; 2],
+    ) -> anyhow::Result<Option<AimTarget>> {
         let memory = ctx.states.resolve::<StateCS2Memory>(())?;
         let entities = ctx.states.resolve::<StateEntityList>(())?;
         let class_name_cache = ctx.states.resolve::<ClassNameCache>(())?;
@@ -162,25 +202,12 @@ impl AimBot {
         };
 
         let local_team_id = local_player_controller.m_iPendingTeamNum()?;
-        let local_pawn_handle = local_player_controller.m_hPlayerPawn()?;
-        let local_pawn = entities
-            .entity_from_handle(&local_pawn_handle)
-            .context("entity from handle failed")?
-            .value_reference(memory.view_arc())
-            .context("local player pawn")?;
 
-        let local_position = Vector3::from_row_slice(&local_pawn.m_vOldOrigin()?);
-        
         let view_target = ctx.states.resolve::<LocalCameraControllerTarget>(())?;
         let view_target_entity_id = match &view_target.target_entity_id {
             Some(value) => *value,
             None => return Ok(None),
         };
-
-        let screen_center = [
-            view.screen_bounds.x / 2.0,
-            view.screen_bounds.y / 2.0,
-        ];
 
         let mut best_target: Option<AimTarget> = None;
         let mut best_distance = f32::MAX;
@@ -229,7 +256,6 @@ impl AimBot {
             // Get target bone position based on settings
             let target_position = match self.get_bone_position(
                 settings.aimbot_bone_target,
-                &pawn_info,
                 &pawn_model,
                 &model,
                 &view,
@@ -253,110 +279,27 @@ impl AimBot {
                 continue;
             }
 
-            // Calculate world distance for scaling
-            let _world_distance = (target_position - local_position).norm();
-
             // Prefer closer targets to crosshair
             if screen_distance < best_distance {
                 best_distance = screen_distance;
                 best_target = Some(AimTarget {
                     entity_id: entity_identity.handle::<()>()?.get_entity_index(),
                     target_position,
-                    screen_position: [screen_pos.x, screen_pos.y],
                 });
             }
         }
 
         Ok(best_target)
     }
-
-    fn calculate_smooth_movement_with_rcs(
-        &mut self,
-        target_screen_pos: [f32; 2],
-        screen_center: [f32; 2],
-        settings: &AppSettings,
-        rcs_compensation: Option<(f32, f32)>,
-    ) -> (i32, i32) {
-        // Calculate deltas exactly like C++
-        let mut delta_x = target_screen_pos[0] - screen_center[0];
-        let mut delta_y = target_screen_pos[1] - screen_center[1];
-
-        // Apply RCS compensation exactly like C++: deltaX -= rcsX; deltaY -= rcsY
-        if let Some((rcs_x, rcs_y)) = rcs_compensation {
-            delta_x -= rcs_x;
-            delta_y -= rcs_y;
-        }
-
-        // Apply smoothing (simpler logic without distance scaling)
-        let smooth_factor_x = settings.aimbot_smoothness_x.max(1.0);
-        let smooth_factor_y = settings.aimbot_smoothness_y.max(1.0);
-
-        let mouse_move_x = (delta_x / smooth_factor_x) as i32;
-        let mouse_move_y = (delta_y / smooth_factor_y) as i32;
-
-        (mouse_move_x, mouse_move_y)
-    }
-
-    fn calculate_rcs_compensation(
-        &self,
-        ctx: &UpdateContext,
-    ) -> anyhow::Result<Option<(f32, f32)>> {
-        let settings = ctx.states.resolve::<AppSettings>(())?;
-        if !settings.aimbot_rcs_enabled {
-            return Ok(None);
-        }
-
-        let memory = ctx.states.resolve::<StateCS2Memory>(())?;
-        let entities = ctx.states.resolve::<StateEntityList>(())?;
-        let local_controller = ctx.states.resolve::<StateLocalPlayerController>(())?;
-        
-        let local_pawn_handle = match local_controller.instance.value_reference(memory.view_arc()) {
-            Some(local_controller) => local_controller.m_hPlayerPawn()?,
-            None => return Ok(None),
-        };
-
-        let local_pawn = entities
-            .entity_from_handle(&local_pawn_handle)
-            .context("missing local player pawn")?
-            .value_reference(memory.view_arc())
-            .context("nullptr")?;
-
-        let shots_fired = local_pawn.m_iShotsFired()?;
-        if shots_fired <= 1 {
-            return Ok(None);
-        }
-
-        // Get punch angle data (exact C++ logic)
-        let punch_angle = nalgebra::Vector3::from_row_slice(&local_pawn.m_aimPunchAngle()?[0..3]);
-        let punch_angle_vel = nalgebra::Vector3::from_row_slice(&local_pawn.m_aimPunchAngleVel()?[0..3]);
-        let _punch_tick_base = local_pawn.m_aimPunchTickBase()?;
-        let punch_tick_fraction = local_pawn.m_aimPunchTickFraction()?;
-        
-        // Calculate RCS exactly like C++: punchAngle * recoilControlSystem strength
-        let mut rcs_x = punch_angle.y * settings.aimbot_rcs_x; // Note: X uses Y component (yaw)
-        let mut rcs_y = punch_angle.x * settings.aimbot_rcs_y; // Note: Y uses X component (pitch)
-
-        // Add velocity compensation exactly like C++: punchAngleVel * punchTickFraction * 0.1f
-        rcs_x += punch_angle_vel.y * punch_tick_fraction * 0.1;
-        rcs_y += punch_angle_vel.x * punch_tick_fraction * 0.1;
-
-        // Note: Punch cache access requires more complex memory handling
-        // The core RCS logic above provides most of the recoil compensation benefit
-        // Cache smoothing can be added later if needed
-
-        Ok(Some((rcs_x, rcs_y)))
-    }
 }
 
 impl Enhancement for AimBot {
     fn update(&mut self, ctx: &UpdateContext) -> anyhow::Result<()> {
         let settings = ctx.states.resolve::<AppSettings>(())?;
-        
-        if self.toggle.update(
-            &settings.aimbot_mode,
-            ctx.input,
-            &settings.key_aimbot,
-        ) {
+        if self
+            .toggle
+            .update(&settings.aimbot_mode, ctx.input, &settings.key_aimbot)
+        {
             ctx.cs2.add_metrics_record(
                 obfstr!("feature-aimbot-toggle"),
                 &format!(
@@ -365,62 +308,120 @@ impl Enhancement for AimBot {
                 ),
             );
         }
-
-        // Pause aimbot when settings menu is open to prevent interference during configuration
-        if ctx.settings_visible {
+        if ctx.settings_visible || (!self.toggle.enabled && !settings.aim_assist_recoil) {
+            self.reset();
             return Ok(());
         }
-
-        if !self.toggle.enabled {
-            return Ok(());
+        let snapshot = match self.input.read(ctx) {
+            Ok(Some(snapshot)) => snapshot,
+            Ok(None) => {
+                self.reset();
+                return Ok(());
+            }
+            Err(error) => {
+                self.reset();
+                return Err(error);
+            }
+        };
+        let identity = (snapshot.pawn, snapshot.weapon);
+        if self.local_identity != Some(identity) {
+            self.reset();
+            self.local_identity = Some(identity);
         }
-
+        self.recoil_source = Some(snapshot.recoil_source);
+        let recoil_delta = self.recoil_history.sample(
+            snapshot.pawn,
+            snapshot.weapon,
+            snapshot.shots,
+            snapshot.recoil,
+        );
         let view = ctx.states.resolve::<ViewController>(())?;
-        let screen_center = [
-            view.screen_bounds.x / 2.0,
-            view.screen_bounds.y / 2.0,
+        let shot_angles = [
+            snapshot.view[0] + snapshot.recoil[0],
+            snapshot.view[1] + snapshot.recoil[1],
         ];
-
-        // Find best target
-        let target = self.find_best_target(ctx)?;
-        let Some(target) = target else {
-            self.last_target_entity_id = None;
-            self.current_target_position = None;
-            return Ok(());
+        // Project a point far along the shot ray, not the screen-center crosshair.
+        self.shot_screen_position = view
+            .world_to_screen(&(snapshot.eye + direction(shot_angles) * 10000.0), true)
+            .filter(|p| p.x.is_finite() && p.y.is_finite())
+            .map(|p| [p.x, p.y]);
+        let target = if self.toggle.enabled {
+            match self.shot_screen_position {
+                Some(origin) => self.find_best_target(ctx, origin)?,
+                None => None,
+            }
+        } else {
+            None
         };
 
-        // Update target tracking
-        self.last_target_entity_id = Some(target.entity_id);
-        self.current_target_position = Some(target.target_position);
-
-        // Calculate RCS compensation
-        let rcs_compensation = self.calculate_rcs_compensation(ctx)?;
-        self.last_rcs_values = rcs_compensation;
-
-        // Simple aimbot - smoothly aim towards target with RCS compensation
-        let (mouse_x, mouse_y) = self.calculate_smooth_movement_with_rcs(
-            target.screen_position,
-            screen_center,
-            &settings,
-            rcs_compensation,
-        );
-
-        // Only move if the movement is significant enough to avoid micro-movements
-        let movement_threshold = 1;
-        if mouse_x.abs() >= movement_threshold || mouse_y.abs() >= movement_threshold {
-            let mouse_state = MouseState {
+        let angles = if let Some(target) = target {
+            let continuing_target = self.last_target_entity_id == Some(target.entity_id);
+            if !continuing_target {
+                self.movement_remainder = [0.0; 2];
+            }
+            self.last_target_entity_id = Some(target.entity_id);
+            self.current_target_position = Some(target.target_position);
+            // The standalone helper also enables recoil-aware targeting. It has no
+            // separate output while this controller owns a target.
+            let strength = if settings.aimbot_rcs_enabled {
+                [
+                    settings.aimbot_rcs_y.clamp(0.0, 2.0),
+                    settings.aimbot_rcs_x.clamp(0.0, 2.0),
+                ]
+            } else if settings.aim_assist_recoil {
+                [1.0; 2]
+            } else {
+                [0.0; 2]
+            };
+            let recoil = [
+                snapshot.recoil[0] * strength[0],
+                snapshot.recoil[1] * strength[1],
+            ];
+            self.last_rcs_values = Some((recoil[1], recoil[0]));
+            let Some(error) =
+                shot_error(snapshot.eye, target.target_position, snapshot.view, recoil)
+            else {
+                self.reset_tracking();
+                return Ok(());
+            };
+            let delta = if continuing_target {
+                [recoil_delta[0] * strength[0], recoil_delta[1] * strength[1]]
+            } else {
+                [0.0; 2]
+            };
+            aim_correction(
+                error,
+                delta,
+                [settings.aimbot_smoothness_y, settings.aimbot_smoothness_x],
+            )
+        } else {
+            if self.last_target_entity_id.is_some() {
+                self.reset_tracking();
+            }
+            if !settings.aim_assist_recoil
+                || snapshot.shots <= 0
+                || snapshot.shots as u32 <= settings.aim_assist_recoil_min_bullets
+            {
+                self.movement_remainder = [0.0; 2];
+                self.last_rcs_values = None;
+                return Ok(());
+            }
+            self.last_rcs_values = Some((recoil_delta[1], recoil_delta[0]));
+            [-recoil_delta[0], -recoil_delta[1]]
+        };
+        let counts = mouse_counts(angles, snapshot.degrees_per_count);
+        let mouse_x = accumulate_movement(counts[0], &mut self.movement_remainder[0]);
+        let mouse_y = accumulate_movement(counts[1], &mut self.movement_remainder[1]);
+        if mouse_x != 0 || mouse_y != 0 {
+            ctx.cs2.send_mouse_state(&[MouseState {
                 last_x: mouse_x,
                 last_y: mouse_y,
                 ..Default::default()
-            };
-
-            ctx.cs2.send_mouse_state(&[mouse_state])?;
+            }])?;
             self.last_smoothing_time = Instant::now();
         }
-
         Ok(())
     }
-
     fn update_settings(
         &mut self,
         _ui: &imgui::Ui,
@@ -437,21 +438,27 @@ impl Enhancement for AimBot {
         _unicode_text: &UnicodeTextRenderer,
     ) -> anyhow::Result<()> {
         let settings = states.resolve::<AppSettings>(())?;
-        
+
         // Only draw FOV circle when enabled AND aimbot is active
         if settings.aimbot_show_fov && self.toggle.enabled {
-            let view = states.resolve::<ViewController>(())?;
             let draw_list = ui.get_window_draw_list();
-            let screen_center = [
-                view.screen_bounds.x / 2.0,
-                view.screen_bounds.y / 2.0,
-            ];
+            let Some(screen_center) = self.shot_screen_position else {
+                return Ok(());
+            };
 
             // Simple FOV circle drawing with error handling
-            if screen_center[0] > 0.0 && screen_center[1] > 0.0 && settings.aimbot_fov_radius > 0.0 {
+            if settings.aimbot_fov_radius > 0.0 {
                 draw_list
-                    .add_circle(screen_center, settings.aimbot_fov_radius, [1.0, 1.0, 1.0, 0.3])
+                    .add_circle(
+                        screen_center,
+                        settings.aimbot_fov_radius,
+                        [1.0, 1.0, 1.0, 0.3],
+                    )
                     .thickness(1.0)
+                    .build();
+                draw_list
+                    .add_circle(screen_center, 3.0, [1.0, 0.65, 0.1, 1.0])
+                    .thickness(1.5)
                     .build();
             }
         }
@@ -466,7 +473,7 @@ impl Enhancement for AimBot {
         _unicode_text: &UnicodeTextRenderer,
     ) -> anyhow::Result<()> {
         let settings = states.resolve::<AppSettings>(())?;
-        
+
         // Only show debug window if the setting is enabled
         if !settings.aimbot_show_debug {
             return Ok(());
@@ -476,34 +483,40 @@ impl Enhancement for AimBot {
         let mut show_debug = settings.aimbot_show_debug;
         ui.window(obfstr!("Aimbot Debug"))
             .opened(&mut show_debug)
-            .size([280.0, 180.0], Condition::FirstUseEver)
+            .size([320.0, 230.0], Condition::FirstUseEver)
             .build(|| {
                 ui.text(format!("Aimbot Active: {}", self.toggle.enabled));
-                
+
                 if let Some(entity_id) = self.last_target_entity_id {
                     ui.text(format!("Target ID: {}", entity_id));
                 } else {
                     ui.text("Target: None");
                 }
-                
+
                 ui.separator();
                 ui.text(format!("FOV: {:.0}px", settings.aimbot_fov_radius));
-                ui.text(format!("Smoothness: {:.1}, {:.1}", 
-                    settings.aimbot_smoothness_x, settings.aimbot_smoothness_y));
-                
+                ui.text(format!(
+                    "Smoothness: {:.1}, {:.1}",
+                    settings.aimbot_smoothness_x, settings.aimbot_smoothness_y
+                ));
+
                 ui.separator();
-                if settings.aimbot_rcs_enabled {
-                    ui.text(format!("RCS: {:.2}, {:.2}", 
-                        settings.aimbot_rcs_x, settings.aimbot_rcs_y));
-                    
+                if settings.aimbot_rcs_enabled || settings.aim_assist_recoil {
+                    ui.text(format!(
+                        "RCS: {:.2}, {:.2}",
+                        settings.aimbot_rcs_x, settings.aimbot_rcs_y
+                    ));
+
                     if let Some((rcs_x, rcs_y)) = self.last_rcs_values {
-                        ui.text(format!("Active RCS: {:.2}, {:.2}", rcs_x, rcs_y));
+                        ui.text(format!("Recoil degrees: {:.2}, {:.2}", rcs_x, rcs_y));
                     } else {
                         ui.text("RCS: Inactive");
                     }
                 } else {
                     ui.text("RCS: Disabled");
                 }
+                ui.text("Shot marker excludes random spread");
+                ui.text(self.recoil_source.unwrap_or("Recoil source: inactive"));
             });
 
         // If user closed the debug window, update the setting
@@ -520,5 +533,85 @@ impl Enhancement for AimBot {
 struct AimTarget {
     entity_id: u32,
     target_position: Vector3<f32>,
-    screen_position: [f32; 2],
-} 
+}
+
+// Preserve sub-count movement so smoothing can converge on small distant targets.
+fn accumulate_movement(step: f32, remainder: &mut f32) -> i32 {
+    if !step.is_finite() {
+        *remainder = 0.0;
+        return 0;
+    }
+    // Repeated reads can have zero recoil delta between game updates.
+    if step == 0.0 {
+        return 0;
+    }
+    if step.signum() != remainder.signum() {
+        *remainder = 0.0;
+    }
+    let movement = step + *remainder;
+    let whole = movement as i32;
+    *remainder = movement - whole as f32;
+    whole
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn named_target_uses_animated_bone_and_rejects_helper_names() {
+        let model = CS2Model {
+            bones: vec![
+                cs2::Bone {
+                    name: "head_helper".into(),
+                    ..Default::default()
+                },
+                cs2::Bone {
+                    name: "head_0".into(),
+                    ..Default::default()
+                },
+            ],
+            ..Default::default()
+        };
+        let animated_head = Vector3::new(100.0, 200.0, 43.0);
+        let pawn_model = StatePawnModelInfo {
+            model_address: 0,
+            bone_states: vec![
+                cs2::BoneStateData {
+                    position: Vector3::zeros(),
+                },
+                cs2::BoneStateData {
+                    position: animated_head,
+                },
+            ],
+        };
+        assert_eq!(
+            AimBot::find_bone_by_name(&model, &["head_0", "head"], &pawn_model),
+            Some(animated_head)
+        );
+        assert_eq!(
+            AimBot::find_bone_by_name(&model, &["neck"], &pawn_model),
+            None
+        );
+    }
+
+    #[test]
+    fn small_movements_eventually_produce_input() {
+        for step in [0.25, -0.25] {
+            let mut remainder = 0.0;
+            let total: i32 = (0..40)
+                .map(|_| accumulate_movement(step, &mut remainder))
+                .sum();
+            assert_eq!(total, (step * 40.0) as i32);
+        }
+    }
+
+    #[test]
+    fn reversal_discards_stale_movement_but_idle_samples_preserve_precision() {
+        let mut remainder = 0.75;
+        assert_eq!(accumulate_movement(-0.25, &mut remainder), 0);
+        assert_eq!(remainder, -0.25);
+        assert_eq!(accumulate_movement(0.0, &mut remainder), 0);
+        assert_eq!(remainder, -0.25);
+    }
+}
